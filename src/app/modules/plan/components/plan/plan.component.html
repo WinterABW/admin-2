@@ -1,0 +1,77 @@
+<app-page (refreshClicked)="loadData()" addUrl="/plan/create" title="Planes">
+  <ng-container filters>
+    <form class="flex sm:flex-row sm:justify-between sm:gap-5"
+      [formGroup]="filters">
+      <mat-form-field class="" floatLabel="auto">
+        <mat-label>Alias</mat-label>
+        <input matInput type="text" formControlName="alias__icontains">
+      </mat-form-field>
+      <mat-form-field class="" floatLabel="auto">
+        <mat-label>Nombre</mat-label>
+        <input matInput type="text" formControlName="nombre__icontains">
+      </mat-form-field>
+      <mat-form-field class="" floatLabel="auto">
+        <mat-label>Descripción</mat-label>
+        <input matInput type="text" formControlName="descripcion__icontains">
+      </mat-form-field>
+      <mat-form-field class="" floatLabel="auto">
+        <mat-label>Precio</mat-label>
+        <input matInput type="text" formControlName="precio__exact">
+      </mat-form-field>
+    </form>
+  </ng-container>
+  <ng-container content>
+    <mat-progress-bar *ngIf="loaders.get$| async" mode="query"></mat-progress-bar>
+    <table [dataSource]="plans" class="w-full" mat-table>
+      <ng-container matColumnDef="nombre">
+        <th *matHeaderCellDef mat-header-cell>Nombre</th>
+        <td *matCellDef="let element" mat-cell> {{element.nombre}} </td>
+      </ng-container>
+      <ng-container matColumnDef="alias">
+        <th *matHeaderCellDef mat-header-cell>Alias</th>
+        <td *matCellDef="let element" mat-cell> {{element.alias}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="descripcion">
+        <th *matHeaderCellDef mat-header-cell> Descripción</th>
+        <td *matCellDef="let element" mat-cell> {{element.descripcion}} </td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th *matHeaderCellDef mat-header-cell> Fecha</th>
+        <td *matCellDef="let element" mat-cell>
+          <div class="flex flex-column">
+            <span class="font-bold">{{element.updated_at | date: 'dd/MM/yy'}}</span>
+            <span>{{element.updated_at | date: 'hh:mm a'}}</span>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="precio">
+        <th *matHeaderCellDef mat-header-cell> Precio</th>
+        <td *matCellDef="let element" mat-cell> {{element.precio}} </td>
+      </ng-container>
+      <ng-container matColumnDef="operations">
+        <th *matHeaderCellDef mat-header-cell> Operaciones</th>
+        <td *matCellDef="let element" mat-cell>
+          <div class="buttons">
+            <a [routerLink]="['./edit', element.id]" mat-icon-button matTooltip="Editar plan">
+              <mat-icon>edit</mat-icon>
+            </a>
+            <button (click)="delete(element.id)" color="warn" mat-icon-button matTooltip="Eliminar plan">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+          </div>
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns;sticky: true" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+      <tr *matNoDataRow class="mat-row">
+        <td class="mat-cell" class="text-center" colspan="3">Sin datos</td>
+      </tr>
+    </table>
+    <mat-paginator #matPaginator (page)="paginate($event)" [length]="totalCount" [pageSizeOptions]="[10, 30, 50, 75]"
+      [pageSize]="10" showFirstLastButtons>
+    </mat-paginator>
+  </ng-container>
+</app-page>

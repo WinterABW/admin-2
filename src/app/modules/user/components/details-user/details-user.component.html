@@ -1,0 +1,62 @@
+<div class="flex justify-between">
+  <h2 class="text-center mx-auto" mat-dialog-title>Detalles</h2>
+  <button mat-dialog-close mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="mx-1 mat-card">
+  <img *ngIf="data.user.avatar" [src]="data.user.avatar+'_400x180'" alt="Poster" width="100%">
+  <img *ngIf="!data.user.avatar" alt="..." matListAvatar src="../../../../../assets/img/user-placeholder.png"
+    width="100%">
+
+  <mat-list>
+    <mat-list-item *ngIf="data.user.first_name || data.user.last_name" style="height: auto">
+      <p matLine>
+        <span class="font-weight-bold">Nombre:</span>
+        <span class="text-wrap">
+          {{data?.user?.first_name + ' ' + data?.user?.last_name }}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item style="height: auto">
+      <p matLine>
+        <span class="font-weight-bold">Usuario:</span>
+        <span class="text-wrap">
+          {{data.user.username}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item *ngIf="data.user.email" style="height: auto">
+      <p matLine>
+        <span class="font-weight-bold">Correo:</span>
+        <a href="mailto: {{data.user.email}}" class="text-wrap">
+          {{data.user.email}}
+        </a>
+      </p>
+    </mat-list-item>
+    <mat-list-item style="height: auto">
+      <p matLine>
+        <span class="font-weight-bold">Teléfono:</span>
+        <a href="tel: {{data.user.phone_number}}" class="text-wrap">
+          {{data.user.phone_number}}
+        </a>
+      </p>
+    </mat-list-item>
+    <mat-list-item *ngIf="data.user.groups.length" style="height: auto">
+      <p class="text-wrap" matLine>
+        <span class="font-weight-bold">Rol:</span>
+        <span *ngFor="let group of data.user.groups; let index = index">
+          {{index > 0 ? ', ' + group.name : group.name}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Fecha:</span>
+        <span>
+          {{ data.user.date_joined| date: 'd/L/yyyy h:mm a'}}
+        </span>
+      </p>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>

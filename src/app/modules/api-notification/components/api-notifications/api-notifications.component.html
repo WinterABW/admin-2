@@ -1,0 +1,62 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="push" position="end" style="width: 350px;">
+    <app-api-notification-create></app-api-notification-create>
+  </mat-sidenav>
+  <mat-sidenav-content>
+
+
+    <app-page (refreshClicked)="loadData()" addUrl="/notifications/create" title="Notificaciones">
+      <ng-container content>
+        <mat-progress-bar *ngIf="loaders.get$| async" mode="query"></mat-progress-bar>
+        <table [dataSource]="apiNotifications$" class="w-full" mat-table>
+          <ng-container matColumnDef="id">
+            <th *matHeaderCellDef mat-header-cell>Id</th>
+            <td *matCellDef="let element" mat-cell> {{element.id}} </td>
+          </ng-container>
+
+          <!--<ng-container matColumnDef="subject">
+            <th *matHeaderCellDef mat-header-cell> Asunto</th>
+            <td *matCellDef="let element" mat-cell> {{element.mail.subject}} </td>
+          </ng-container>-->
+          <ng-container matColumnDef="users">
+            <th *matHeaderCellDef mat-header-cell> Receptor</th>
+            <td *matCellDef="let element" mat-cell> {{element.receptor.username}} </td>
+          </ng-container>
+          <ng-container matColumnDef="date">
+            <th *matHeaderCellDef mat-header-cell> Fecha</th>
+            <td *matCellDef="let element" mat-cell>
+              <div class="flex flex-column">
+                <span class="font-bold">{{element.fecha_creacion | date: 'dd/MM/yy'}}</span>
+                <span>{{element.fecha_creacion | date: 'hh:mm a'}}</span>
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="msg">
+            <th *matHeaderCellDef mat-header-cell> Mensaje</th>
+            <td *matCellDef="let element" mat-cell> {{element.api.msg}} </td>
+          </ng-container>
+          <ng-container matColumnDef="operations">
+            <th *matHeaderCellDef mat-header-cell> Operaciones</th>
+            <td *matCellDef="let element" mat-cell>
+              <div class="buttons">
+                <button (click)="delete(element.id)" color="warn" mat-icon-button
+                        matTooltip="Eliminar notificación">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="displayedColumns;sticky: true" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+          <tr *matNoDataRow class="mat-row">
+            <td class="mat-cell" class="text-center" colspan="3">Sin datos</td>
+          </tr>
+        </table>
+        <mat-paginator #matPaginator (page)="paginate($event)" [length]="totalCount"
+                       [pageSizeOptions]="[10, 30, 50, 75]" [pageSize]="10" showFirstLastButtons>
+        </mat-paginator>
+      </ng-container>
+    </app-page>
+  </mat-sidenav-content>
+</mat-sidenav-container>

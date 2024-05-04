@@ -1,0 +1,28 @@
+.container {
+  width: 98%;
+  margin: 25px auto;
+
+  & h1 {
+    text-align: center;
+  }
+
+  & .add-button {
+    margin: 15px 0;
+  }
+
+  & table {
+    width: 100%;
+
+    & .mat-column-titulo {
+      width: 20%;
+    }
+
+    & .mat-column-texto {
+      width: 70%;
+    }
+
+    & .mat-column-operations {
+      width: 10%;
+    }
+  }
+}

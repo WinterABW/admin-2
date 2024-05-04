@@ -1,0 +1,123 @@
+<div [@listAnimation]="cards.length" class="grid grid-flow-row md:grid-flow-col  auto-cols-fr gap-4 py-6">
+  <app-stat-card *ngFor="let card of cards" [color]="card.color" [icon]="card.icon" [label]="card.label"
+    [number]="card.number"></app-stat-card>
+</div>
+
+<div class="flex flex-col sm:flex-row items-center sm:justify-between sm:w-full sm:overflow-x-hidden sm:gap-1">
+
+  <div class="w-1/3">
+      <mat-card>
+        <mat-card-content>
+          <mat-card-title>Úlltimas publicaciones</mat-card-title>
+          <mat-list>
+            <ng-container *ngIf='publicaciones | async as publicacions'>
+              <mat-list-item *ngFor="let publicacion of publicacions">
+                <img matListItemAvatar [src]="publicacion.url_imagen+'_60x60'" alt="test">
+                <h3 matListItemTitle><a
+                    href="https://www.picta.cu/medias/{{publicacion.slug_url}}">{{publicacion.nombre}}</a></h3>
+                <p matListItemLine>
+                  <span>{{publicacion.canal.nombre}}</span>
+                  <span class="demo-2"> - {{ publicacion.fecha_creacion| date: 'd/L/yyyy h:mm a'}}</span>
+                </p>
+                <p matListItemLine matTooltip="{{publicacion.descripcion}}">
+                  {{ publicacion.descripcion ? publicacion.descripcion : 'Sin descripión' }}
+                </p>
+              </mat-list-item>
+            </ng-container>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+  </div>
+
+  <div class="w-1/3">
+      <mat-card>
+        <mat-card-content>
+          <mat-card-title>Comentarios más recientes</mat-card-title>
+          <mat-list>
+            <ng-container *ngIf='comments | async as comentarios'>
+              <mat-list-item *ngFor="let comment of comentarios">
+                <img matListItemAvatar [src]="comment.usuario.avatar ? comment.usuario.avatar+'_60x60' :
+                'assets/img/user-placeholder.png'" alt="avatar">
+                <h3 matListItemTitle>{{comment.usuario.username}}</h3>
+                <p matListItemLine>
+                  <span>{{comment.publicacion.nombre}}</span>
+                  <span class="demo-2"> - {{comment.fecha | date: 'd/L/yyyy h:mm a'}}</span>
+                </p>
+                <p matListItemLine matTooltip="{{comment.texto}}">
+                  {{comment.texto}}
+                </p>
+              </mat-list-item>
+            </ng-container>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+  </div>
+
+  <div class="w-1/3">
+    <mat-card>
+      <mat-card-content>
+        <mat-card-title>Úlltimos usuarios registrados</mat-card-title>
+        <mat-list>
+          <ng-container *ngIf='users | async as usuarios'>
+            <mat-list-item *ngFor="let user of usuarios">
+              <img matListItemAvatar [src]="user.avatar ? user.avatar+'_60x60' :
+              'assets/img/user-placeholder.png'" alt="avatar">
+              <h3 matListItemTitle>{{user.username}}</h3>
+              <p matListItemLine>
+                <span>{{user.phone_number}}</span>
+                <span class="demo-2"> - {{user.date_joined | date: 'd/L/yyyy h:mm a'}}</span>
+              </p>
+              <p matListItemLine matTooltip="{{user.username}}">
+                {{user.username}}
+              </p>
+            </mat-list-item>
+          </ng-container>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+</div>
+
+
+  <!-- <app-list-card title="Úlltimos usuarios registrados" class="w-1/3">
+    <ng-container content>
+      <ng-container *ngIf='users | async as usuarios'>
+        <mat-list [@listAnimation]="usuarios.length">
+          <mat-list-item *ngFor="let user of usuarios" class="custom p-4 overflow-hidden">
+            <div class="container contenedor">
+              <div>
+                <img [src]="user.avatar
+                ? user.avatar+'_60x60'
+                : 'assets/img/user-placeholder.png'
+      " alt="avatar" matListAvatar class="imgc">
+              </div>
+              <div>
+                <h2 class="font-weight-bold" matLine> {{user.username}} </h2>
+                <h2 class="font-weight-bold" matLine> {{user.phone_number}} </h2>
+                <h3 class="text-muted" matLine>{{user.date_joined | date: 'd/L/yyyy h:mm a'}} </h3>
+              </div>
+            </div>
+          </mat-list-item>
+        </mat-list>
+        <div class="flex justify-end">
+          <button color="primary" mat-button routerLink="/usuarios">Ver todos</button>
+        </div>
+      </ng-container>
+    </ng-container>
+  </app-list-card> -->
+
+  <!-- <app-list-card title="Últimos usuarios suscritos">
+    <ng-container content>
+      <ng-container *ngIf='subscriptions | async as subs'>
+        <mat-list [@listAnimation]="subs.length">
+          <mat-list-item *ngFor="let user of subs" class="custom">
+            <img [src]="user.avatar
+          ? user.avatar+'_60x60'
+          : 'assets/img/user-placeholder.png'
+" alt="avatar" matListAvatar>
+            <h2 class="font-weight-bold" matLine> {{user.usuario.username}} </h2>
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+    </ng-container>
+  </app-list-card> -->
+</div>

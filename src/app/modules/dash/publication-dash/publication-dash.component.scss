@@ -1,0 +1,47 @@
+.dash-container {
+  display: grid;
+  grid-gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 350px));
+}
+
+.blue-back {
+  background-color: #2196F3;
+  color: white;
+}
+
+.cyan-back {
+  background-color: #00BCD4;
+  color: white;
+}
+
+.red-back {
+  background-color: #f44336;
+  color: white;
+}
+
+.yellow-back {
+  background-color: #FFC107;
+  color: white;
+}
+
+.custom{
+  height: 100% !important;
+}
+.imgc{
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  border: 1px solid black;
+  margin: auto;
+}
+
+.contenedor {
+  display: grid;
+  grid-template-columns: 20% 80%; /* Define el ancho de las columnas */
+  grid-gap: 10px; /* Espacio entre las columnas */
+  margin: auto;
+}
+
+.mat-mdc-list-item-icon {
+  color: rgba(0, 0, 0, 0.54);
+}

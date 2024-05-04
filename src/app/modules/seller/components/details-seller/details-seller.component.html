@@ -1,0 +1,50 @@
+<div class="flex justify-between">
+  <h2 mat-dialog-title class="text-center mx-auto">Detalles</h2>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="mx-1 mat-card">
+  <mat-list>
+    <mat-list-item style="height: auto">
+      <p matLine>
+        <span class="font-weight-bold">Nombre:</span>
+        <span class="text-wrap">
+          {{data.seller.name}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item style="height: auto">
+      <p matLine>
+        <span class="font-weight-bold">Email:</span>
+        <span class="text-wrap">
+          {{data.seller.email}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item style="height: auto">
+      <p matLine>
+        <span class="font-weight-bold">CI:</span>
+        <span class="text-wrap">
+          {{data.seller.ci}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Fecha:</span>
+        <span>
+          {{ data.seller.joined| date: 'd/L/yyyy h:mm a'}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Cuenta:</span>
+        <span>
+          {{data.seller.account}}
+        </span>
+      </p>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>

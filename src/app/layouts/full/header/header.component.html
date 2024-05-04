@@ -1,0 +1,17 @@
+<!-- ============================================================== -->
+<!-- Profile - style you can find in header.scss -->
+<!-- ============================================================== -->
+<button [matMenuTriggerFor]="profile" mat-icon-button class="m-r-5 p-0 d-flex jc-c align-items-center"> <img
+        src="{{user?.avatar}}_100x100" alt="user" class="profile-pic"> </button>
+<mat-menu #profile="matMenu" class="mymegamenu">
+    <!-- <button mat-menu-item>
+        <mat-icon>settings</mat-icon> Settings </button>
+    <button mat-menu-item>
+        <mat-icon>account_box</mat-icon> Profile </button> -->
+    <button mat-menu-item routerLink="/about">
+        <mat-icon fontIcon="notifications_off"></mat-icon> Acerca de Picta</button>
+    <button mat-menu-item routerLink="/terms">
+        <mat-icon fontIcon="notifications_off"></mat-icon>Terminos de uso</button>
+    <button mat-menu-item (click)="logout()">
+        <mat-icon fontIcon="exit_to_app"></mat-icon> Sign Out </button>
+</mat-menu>

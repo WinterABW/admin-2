@@ -1,0 +1,20 @@
+<div class="">
+  <div [class.mb-6]="!showRefreshBtn" class="page-title">{{title}}</div>
+  <div *ngIf="showAddBtn" class="flex flex-col md:flex-row items-center md:justify-end">
+    <ng-content select="[extraBtns]"></ng-content>
+    <button (click)="addBtnClicked()" class="page-btn" mat-button>
+      <mat-icon class="mr-1">add</mat-icon>
+      Adicionar
+    </button>
+  </div>
+  <ng-content select="[filters]"></ng-content>
+  <div *ngIf="showRefreshBtn" class="flex flex-col md:flex-row items-center">
+
+    <button (click)="refreshBtnClicked()" class="page-btn" mat-button>
+      <mat-icon class="mr-1">refresh</mat-icon>
+      Actualizar
+    </button>
+  </div>
+  <ng-content select="[content]"></ng-content>
+
+</div>

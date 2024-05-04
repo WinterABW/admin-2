@@ -1,0 +1,146 @@
+<app-page (refreshClicked)="getList()" [showAddBtn]="false" title="Vendedores">
+  <!-- <app-page (refreshClicked)="reload.next()" [showAddBtn]="false" title="Vendedores"> -->
+    <ng-container filters>
+      <form [formGroup]="filters" class="flex flex-col mt-6">
+          <!-- Primer grupo de elementos -->
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:gap-5">
+              <mat-form-field>
+                  <mat-label>Tipo</mat-label>
+                  <mat-select class="w-full" formControlName="type__iexact">
+                      <mat-option value="all">Ver todos</mat-option>
+                      <mat-option value="NATURAL">Natural</mat-option>
+                      <mat-option value="JURIDICO">Juridico</mat-option>
+                  </mat-select>
+              </mat-form-field>
+          
+              <mat-form-field>
+                  <mat-label>Estado</mat-label>
+                  <mat-select class="w-full" formControlName="active">
+                      <mat-option value="all">Ver todos</mat-option>
+                      <mat-option value="true">Activo</mat-option>
+                      <mat-option value="false">No activo</mat-option>
+                  </mat-select>
+              </mat-form-field>
+              
+              <mat-form-field>
+                  <mat-label>Nombre</mat-label>
+                  <input formControlName="name__icontains" matInput type="text">
+              </mat-form-field>
+          </div>
+          <!-- Segundo grupo de elementos -->
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:gap-5">
+              <mat-form-field>
+                  <mat-label>CI</mat-label>
+                  <input formControlName="ci__icontains" matInput type="text">
+              </mat-form-field>
+          
+              <mat-form-field>
+                  <mat-label>Cuenta</mat-label>
+                  <input formControlName="account__icontains" matInput type="text">
+              </mat-form-field>
+          
+              <mat-form-field>
+                  <mat-label>Correo</mat-label>
+                  <input formControlName="email__icontains" matInput type="text">
+              </mat-form-field>
+          </div>
+          <!-- Botón de exportación -->
+          <div class="w-full md:w-full flex justify-between md:justify-end mt-4 md:mt-0">
+              <button (click)="exportTable()" class="page-btn" mat-button>
+                  <mat-icon class="mr-1">file_download_outline</mat-icon>Exportar Vendedores
+              </button>
+          </div>
+      </form>
+  </ng-container>
+  
+  <ng-container content>
+    <div class="hidden lg:block">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <mat-table (matSortChange)="sortBy($event)" [dataSource]="sellers$" mat-table matSort>
+        <!-- Video Column -->
+        <ng-container cdkColumnDef="ci">
+          <mat-header-cell *cdkHeaderCellDef>Vendedor</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            <div class="flex flex-col">
+              <span class="font-weight-bold">{{element.name}}</span>
+              <span class="text-muted">{{element.ci}}</span>
+              <span class="text-muted">{{element.email}}</span>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Usuario Column -->
+        <ng-container cdkColumnDef="active">
+          <mat-header-cell *cdkHeaderCellDef>Activo</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            <mat-slide-toggle (change)="toggleActive($event, element)" [checked]="element.active" color="primary">
+            </mat-slide-toggle>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container cdkColumnDef="type">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header="nombre">Tipo</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>{{ element.type | titlecase }}</mat-cell>
+        </ng-container>
+
+
+        <!-- Symbol Column -->
+        <ng-container cdkColumnDef="address">
+          <mat-header-cell *cdkHeaderCellDef>Dirección</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>{{ element.address}}</mat-cell>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container cdkColumnDef="account">
+          <mat-header-cell *cdkHeaderCellDef>Cuenta</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+
+            {{element.account}}
+          </mat-cell>
+        </ng-container>
+        <ng-container cdkColumnDef="joined">
+          <mat-header-cell *cdkHeaderCellDef>Fecha</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            <div class="flex flex-col">
+              <span class="font-weight-bold">{{element.joined| date: 'd/L/yyyy'}}</span>
+              <span>{{element.joined| date: 'h:mm a'}}</span>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="operaciones">
+          <mat-header-cell *cdkHeaderCellDef>Operaciones</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            <button [routerLink]="['edit', element.id]" mat-icon-button matTooltip="Editar Vendedor">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button (click)="eliminarCanal(element.id)" color="warn" mat-icon-button matTooltip="Eliminar Vendedor">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *cdkRowDef="let row; columns: displayedColumns" class="example-element-row"></mat-row>
+      </mat-table>
+
+      <mat-paginator [pageSizeOptions]="[10, 20, 50]" [pageSize]="params.limit" showFirstLastButtons></mat-paginator>
+    </div>
+    <div class="block lg:hidden">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <mat-action-list>
+        <mat-list-item (click)="openBottomSheet(seller)" *ngFor="let seller of sellers$ | async"
+          [class.hidden-video]="!seller.active" class="mat-card">
+          <h3 class="font-weight-bold" matLine> {{seller.name}} </h3>
+          <h3 class='text-muted' matLine> {{seller.ci}} </h3>
+        </mat-list-item>
+      </mat-action-list>
+      <mat-paginator (page)="paginate($event)" [length]="totalCount" [pageSizeOptions]="[10, 30, 50, 75]"
+        [pageSize]="10" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </ng-container>
+</app-page>

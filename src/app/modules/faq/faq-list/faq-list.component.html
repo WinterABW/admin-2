@@ -1,0 +1,40 @@
+<app-page (refreshClicked)="load()" addPermission="" addUrl="/faqs/add-edit" title="preguntas frecuentes">
+  <ng-container content>
+    <div >
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <table [dataSource]="dataSource" mat-table>
+        <ng-container matColumnDef="titulo">
+          <th *matHeaderCellDef mat-header-cell> Título</th>
+          <td *matCellDef="let element" mat-cell> {{element.titulo}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="texto">
+          <th *matHeaderCellDef mat-header-cell> Texto</th>
+          <td *matCellDef="let element" mat-cell> {{element.texto}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="operations">
+          <th *matHeaderCellDef mat-header-cell> Acciones</th>
+          <td *matCellDef="let element" mat-cell>
+            <div class="flex flex-col sm:flex-row">
+              <button (click)="edit(element.id)" mat-icon-button matTooltip="Editar pregunta">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button (click)="eliminarPregunta(element.id)" color="warn" mat-icon-button
+                matTooltip="Eliminar pregunta">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns;sticky: true" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+
+  </ng-container>
+</app-page>

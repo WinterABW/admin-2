@@ -1,0 +1,23 @@
+<app-page [showAddBtn]="false" [showRefreshBtn]="false"
+  title="{{mode === 'add' ? 'Adicionar' : 'Editar'}} pregunta frecuente">
+  <ng-container content>
+    <form [formGroup]="form">
+      <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Título</mat-label>
+        <input formControlName="titulo" matInput type="text">
+        <mat-error *ngIf="form.get('titulo').hasError('required')">El título es requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Texto</mat-label>
+        <textarea formControlName="texto" matInput></textarea>
+        <mat-error *ngIf="form.get('texto').hasError('required')">El texto es requerido</mat-error>
+      </mat-form-field>
+
+      <div class="flex flex-row items-center justify-end gap-10">
+        <button color="warn" mat-flat-button routerLink="/faqs">Cancelar</button>
+        <button (click)="save()" [disabled]="form.invalid" color="primary" mat-flat-button>Guardar</button>
+      </div>
+    </form>
+  </ng-container>
+</app-page>

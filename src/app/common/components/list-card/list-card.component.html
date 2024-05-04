@@ -1,0 +1,8 @@
+<div class="bg-white border rounded">
+  <div *ngIf="title" class="title-wrapper border-bottom">
+    <div class="text-black text-xl p-6">{{title}}</div>
+  </div>
+  <div class="body-wrapper p-6">
+    <ng-content select="[content]"></ng-content>
+  </div>
+</div>

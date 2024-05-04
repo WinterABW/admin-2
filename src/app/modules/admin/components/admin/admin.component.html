@@ -1,0 +1,249 @@
+<app-page [showAddBtn]="false" [showRefreshBtn]="false" title="Portada">
+  <ng-container content>
+    <mat-tab-group mat-align-tabs="start">
+      <mat-tab label="Filtros">
+        <div class="p-4">
+          <div class="filtros-form">
+            <h6 class="mat-title">Adicionar filtro:</h6>
+            <form (ngSubmit)="addFilter()" [formGroup]="filtroForm"
+              class="flex flex-col md:flex-row filtroForm md:items-center px-4 my-2">
+              <ng-select [clearable]="false" appearance="fill" formControlName="key" placeholder="Llave">
+                <ng-option value="canal_nombre_raw">Canal</ng-option>
+                <ng-option value="id__in">Publicación(es)</ng-option>
+                <ng-option value="ordering">Orden</ng-option>
+              </ng-select>
+
+              <ng-select *ngIf="filtroForm.get('key').value === 'canal_nombre_raw'" [clearSearchOnAdd]="true"
+                [clearable]="false" [searchable]="true" appearance="fill" bindLabel="nombre" class="ml-md-3"
+                formControlName="value" placeholder="Valor">
+                <ng-option *ngFor="let canal of canales$|async" [value]="canal.nombre">{{canal.nombre}}</ng-option>
+              </ng-select>
+              <mat-form-field
+                *ngIf="filtroForm.get('key').value === 'ordering' || filtroForm.get('key').value === 'other'"
+                appearance="fill" class="ml-md-3" color="primary" floatLabel="auto">
+                <mat-label>Valor</mat-label>
+                <input formControlName="value" matInput type="text">
+
+              </mat-form-field>
+              <ng-select (close)="loadPublicaciones()" (search)="searchPub($event)"
+                *ngIf="filtroForm.get('key').value === 'id__in'" [clearSearchOnAdd]="true" [multiple]="true"
+                [searchable]="true" appearance="fill" bindLabel="nombre" class="ml-md-3" formControlName="value"
+                placeholder="Valor">
+                <ng-option *ngFor="let pub of filteredPubs" [value]="pub.id">{{pub.nombre}}</ng-option>
+              </ng-select>
+              <button aria-label="accept button" class="ml-md-3" color="primary" mat-flat-button
+                type="submit">{{modeFiltro === 'add' ? 'Adicionar' : 'Editar'}}</button>
+            </form>
+          </div>
+
+
+          <div class="w-full flex flex-col">
+            <h3 class="mat-title">Listado de filtros</h3>
+            <div class="w-full">
+              <table #tableFiltros [dataSource]="filtros" mat-table matSort style="width: 100%">
+                <ng-container matColumnDef="id">
+                  <th *matHeaderCellDef mat-header-cell> Id</th>
+                  <td *matCellDef="let element" mat-cell> {{element.id}} </td>
+                </ng-container>
+                <ng-container matColumnDef="key">
+                  <th *matHeaderCellDef mat-header-cell> Llave</th>
+                  <td *matCellDef="let element" mat-cell> {{element.key}} </td>
+                </ng-container>
+                <ng-container matColumnDef="value">
+                  <th *matHeaderCellDef mat-header-cell> Valor</th>
+                  <td *matCellDef="let element" mat-cell> {{element.value}} </td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th *matHeaderCellDef mat-header-cell> Acción</th>
+                  <td *matCellDef="let element" mat-cell>
+                    <button (click)="editFiltro(element)" aria-label="edit-filter" mat-icon-button
+                      matTooltip="Editar filtro">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button (click)="deleteFilter(element.id)" aria-label="delete filter" color="warn" mat-icon-button
+                      matTooltip="Eliminar filtro">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+              </table>
+              <mat-paginator #matPaginatorFiltrosTable [pageSizeOptions]="[10, 25, 100]" [showFirstLastButtons]="true">
+              </mat-paginator>
+            </div>
+
+
+          </div>
+        </div>
+
+      </mat-tab>
+      <mat-tab label="Secciones">
+        <div class="flex flex-col w-full ">
+          <div class="flex flex-col p-4 w-full items-center text-center">
+            <h6 class="mat-title">Adicionar sección:</h6>
+            <form (ngSubmit)="addSeccion()" [formGroup]="seccionForm" class="container">
+              <div class="row">
+                <div class="col-12 col-md-4">
+
+                  <mat-form-field appearance="fill" class="" color="primary" floatLabel="auto">
+                    <mat-label>Nombre</mat-label>
+                    <input formControlName="nombre" matInput type="text">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-4">
+
+                  <mat-form-field appearance="fill" class="" color="primary" floatLabel="auto">
+                    <mat-label>Estilo</mat-label>
+                    <mat-select formControlName="estilo">
+                      <mat-option *ngFor="let style of styles|async" [value]="style.id">{{style.nombre}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-md-4">
+                  <mat-form-field appearance="fill" class="" floatLabel="auto">
+                    <mat-label>Fecha de inicio</mat-label>
+                    <input [matDatepicker]="fechaIniPicker" formControlName="fecha_ini" matInput>
+                    <mat-datepicker-toggle [for]="fechaIniPicker" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #fechaIniPicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+              </div>
+
+              <div class="form-row">
+                <div class="col-12 col-md-4">
+                  <mat-form-field appearance="fill" class="" floatLabel="auto">
+                    <mat-label>Fecha de fin</mat-label>
+                    <input [matDatepicker]="fechaFinPicker" formControlName="fecha_fin" matInput>
+                    <mat-datepicker-toggle [for]="fechaFinPicker" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #fechaFinPicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-md-4">
+                  <mat-form-field appearance="fill" class="" color="primary" floatLabel="auto">
+                    <mat-label>Prioridad</mat-label>
+                    <input formControlName="prioridad" matInput min="1" type="number">
+                  </mat-form-field>
+
+                </div>
+                <div class="col-12 col-md-4">
+                  <mat-form-field appearance="fill" class="" color="primary" floatLabel="auto">
+                    <mat-label>Filtros</mat-label>
+                    <mat-select formControlName="filtros" multiple>
+
+                      <mat-option *ngFor="let filtro of filtrosSelect$| async" [value]="filtro.id">{{filtro.key ===
+                        'canal_nombre_raw' ?
+                        'Canal' : 'Publicación(es)'}}
+                        : {{filtro.value}} </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+
+              <button aria-label="accept action button" color="primary" mat-flat-button type="submit">{{mode === 'add' ?
+                'Adicionar' : 'Editar'}}</button>
+            </form>
+          </div>
+
+          <div class="flex flex-col p-4">
+            <h3 class="mat-title text-center">Listado de Secciones</h3>
+            <form [formGroup]="seccionFilters">
+              <div class="flex items-center justify-content-end">
+                <mat-form-field appearance="fill" floatLabel="auto">
+                  <mat-label>Nombre</mat-label>
+                  <input formControlName="nombre__wildcard" matInput type="text">
+                </mat-form-field>
+              </div>
+
+            </form>
+            <div class="">
+              <table #tableSections (matSortChange)="sortTable($event)" [dataSource]="secciones" mat-table matSort
+                style="width: 100%;">
+
+                <ng-container matColumnDef="id">
+                  <th *matHeaderCellDef mat-header-cell> Id</th>
+                  <td *matCellDef="let element" mat-cell> {{element.id}} </td>
+                </ng-container>
+                <ng-container matColumnDef="prioridad">
+                  <th *matHeaderCellDef class="text-center" mat-header-cell mat-sort-header> Prioridad</th>
+                  <td *matCellDef="let element" mat-cell>
+                    <div class="flex items-center position-controls">
+                      <button (click)="upPosition(element)" mat-icon-button matTooltip="Subir posición">
+                        <mat-icon>arrow_upward</mat-icon>
+                      </button>
+                      <span class="mx-3">
+                        {{element.prioridad}}
+
+                      </span>
+                      <button (click)="downPosition(element)" mat-icon-button matTooltip="Bajar posición">
+                        <mat-icon>arrow_downward</mat-icon>
+
+                      </button>
+
+                    </div>
+                  </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="nombre">
+                  <th *matHeaderCellDef mat-header-cell> Nombre</th>
+                  <td *matCellDef="let element" mat-cell> {{element.nombre}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="estilo">
+                  <th *matHeaderCellDef mat-header-cell> Estilo</th>
+                  <td *matCellDef="let element" mat-cell> {{element.estilo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha_ini">
+                  <th *matHeaderCellDef mat-header-cell> Fecha Inicio</th>
+                  <td *matCellDef="let element" mat-cell> {{getDate(element.fecha_ini)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha_fin">
+                  <th *matHeaderCellDef mat-header-cell> Fecha Fin</th>
+                  <td *matCellDef="let element" mat-cell> {{getDate(element.fecha_fin)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="activo">
+                  <th *matHeaderCellDef mat-header-cell> Activo</th>
+                  <td *matCellDef="let element" mat-cell>
+                    <mat-slide-toggle (toggleChange)="toggleActive(element)"
+                      [checked]="element.activo"></mat-slide-toggle>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th *matHeaderCellDef mat-header-cell> Acción</th>
+                  <td *matCellDef="let element" mat-cell>
+                    <button (click)="edit(element)" aria-label="edit section" mat-icon-button
+                      matTooltip="Editar sección">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button (click)="deleteSection(element.id)" aria-label="delete section" color="warn" mat-icon-button
+                      matTooltip="Eliminar sección">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr *matHeaderRowDef="seccionsDisplayedColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: seccionsDisplayedColumns;" mat-row></tr>
+              </table>
+              <mat-paginator #matPaginatorSectionsTable [pageSizeOptions]="[10, 25, 100]" [showFirstLastButtons]="true">
+              </mat-paginator>
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </mat-tab>
+    </mat-tab-group>
+
+
+  </ng-container>
+</app-page>

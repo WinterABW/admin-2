@@ -1,0 +1,5 @@
+<app-page [showAddBtn]="false" [showRefreshBtn]="false" title="Crear notificación">
+  <ng-container content>
+    <app-api-notification-form (saveData)="save($event)"></app-api-notification-form>
+  </ng-container>
+</app-page>

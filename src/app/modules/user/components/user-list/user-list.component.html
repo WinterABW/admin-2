@@ -1,0 +1,191 @@
+<app-page (refreshClicked)="getListByParams()" [showAddBtn]="true" [showRefreshBtn]="true"
+  addPermission="crear_admin_usuario" addUrl="/usuarios/add" title="Usuarios">
+  <ng-container filters>
+    <form [formGroup]="filtersForm"
+      class="flex flex-col md:flex-row md:justify-between md:space-x-4 items-center w-full">
+      <mat-form-field class="m-2" color="primary">
+        <mat-label>Usuario / Teléfono</mat-label>
+        <input formControlName="criterio" matInput type="text">
+      </mat-form-field>
+      <mat-form-field class="m-2" color="primary">
+        <mat-label>Activo</mat-label>
+        <mat-select formControlName="is_active">
+          <mat-option [value]="''">Todos</mat-option>
+          <mat-option [value]="'true'">Sí</mat-option>
+          <mat-option [value]="'false'">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="m-2" color="primary">
+        <mat-label>Baja</mat-label>
+        <mat-select formControlName="baja">
+          <mat-option [value]="''">Todos</mat-option>
+          <mat-option [value]="'true'">Sí</mat-option>
+          <mat-option [value]="'false'">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="m-2" color="primary">
+        <mat-label>Correo</mat-label>
+        <input formControlName="email__contains" matInput type="text">
+      </mat-form-field>
+
+    </form>
+  </ng-container>
+  <ng-container content>
+    <div class="hidden lg:block">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <table [dataSource]="dataSource" aria-label="Elements" class="" mat-table matSort>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="first_name">
+          <th *matHeaderCellDef mat-header-cell>Usuario</th>
+          <td *matCellDef="let element" mat-cell>
+
+            <div class="flex flex-col items-center py-2 text-center">
+              <div class="thumbnail">
+                <img *ngIf="element.avatar" src="{{element.avatar? element.avatar+'_60x60': ''}}" />
+                <img *ngIf="!element.avatar" src="assets/images/users/1.jpg" />
+              </div>
+              <div class="">
+                {{ element.first_name + ' ' + element.last_name }}
+              </div>
+              <div class="font-weight-bold">
+                {{ element.username }}
+              </div>
+              <div class="font-weight-bold text-secondary">
+                {{ element.email }}
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date_joined">
+          <th *matHeaderCellDef mat-header-cell>Fecha</th>
+          <td *matCellDef="let element" mat-cell>
+            {{ element.date_joined | date :'d/L/yyyy' }}
+            <br>
+            {{ element.date_joined | date :'h:mm a' }}
+          </td>
+        </ng-container>
+
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="phone_number">
+          <th *matHeaderCellDef mat-header-cell>Telefono</th>
+          <td *matCellDef="let element" mat-cell>
+            {{ element.phone_number }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="roles">
+          <th *matHeaderCellDef mat-header-cell>Rol</th>
+          <td *matCellDef="let element" mat-cell>
+            <div *ngIf="element.groups.length; else noRole" aria-label="Roles" class="chip-container">
+              <span *ngFor="let rol of element.groups | getRoles" class="chip">{{ rol }}</span>
+            </div>
+            <ng-template #noRole>
+              <span class="text-secondary">Sin roles asignados</span>
+            </ng-template>
+
+            <ng-template #noRole>
+              <span class="text-secondary">Sin roles asignados</span>
+
+            </ng-template>
+
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="is_superuser">
+          <th *matHeaderCellDef mat-header-cell>Super<br>Usuario</th>
+          <td *matCellDef="let element" mat-cell>
+            <mat-icon [color]="element.is_superuser ? 'primary' : 'warn'">{{element.is_superuser ? 'check_circle' :
+              'cancel_circle'}}</mat-icon>
+          </td>
+
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="is_staff">
+          <th *matHeaderCellDef mat-header-cell>Staff</th>
+          <td *matCellDef="let element" mat-cell>
+            <mat-icon [color]="element.is_staff ? 'primary' : 'warn'">{{element.is_staff ? 'check_circle' :
+              'cancel_circle'}}</mat-icon>
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="is_activate">
+          <th *matHeaderCellDef mat-header-cell>Activo</th>
+          <td *matCellDef="let element" mat-cell>
+            <mat-icon [color]="element.is_active ? 'primary' : 'warn'">{{element.is_active ? 'check_circle' :
+              'cancel_circle'}}</mat-icon>
+
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="baja">
+          <th *matHeaderCellDef mat-header-cell>Baja</th>
+          <td *matCellDef="let element" mat-cell>
+            <mat-icon [color]="element.baja ? 'primary' : 'warn'">{{element.baja ? 'check_circle' :
+              'cancel_circle'}}</mat-icon>
+
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="operaciones">
+          <th *matHeaderCellDef mat-header-cell>
+            Operaciones
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <div class="flex flex-row">
+              <button (click)="changePasswordModal(element.id)"
+                *ngIf="authService.hasPermission('set_password_without_old_usuario')" mat-icon-button
+                matTooltip="Cambiar contraseña">
+                <mat-icon>vpn_key</mat-icon>
+              </button>
+              <button (click)="edit(element.id)" mat-icon-button matTooltip="Editar usuario">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button (click)="eliminar(element.id)" color="warn" mat-icon-button matTooltip="Eliminar usuario">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      </table>
+
+      <mat-paginator (page)="pageEvent = paginar($event)" [length]="pageEvent.length"
+        [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="pageEvent.pageSize" showFirstLastButtons></mat-paginator>
+    </div>
+    <div class="block lg:hidden mat-card">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <mat-action-list>
+        <mat-list-item (click)="openBottomSheet(user)" *ngFor="let user of dataSource.data"
+          [class.hidden-video]="!user.is_active" class="mat-card">
+          <img *ngIf="user.avatar" [src]="user.avatar+'_200x200'" alt="..." matListAvatar>
+          <img *ngIf="!user.avatar" alt="..." matListAvatar src="../../../../../assets/img/user-placeholder.png">
+          <h3 class="font-weight-bold" matLine> {{user.first_name }} {{user.last_name }} </h3>
+          <p class="text-muted" matLine>
+            {{user.username}}
+
+          </p>
+          <p class="text-muted w-auto" matLine>
+            {{user.phone_number}}
+
+          </p>
+          <p class="text-muted" matLine>
+            {{ user.date_joined | date :'d/L/yyyy h:mm a' }}
+
+          </p>
+        </mat-list-item>
+      </mat-action-list>
+      <mat-paginator (page)="paginate($event)" [length]="totalCount" [pageSizeOptions]="[10, 30, 50, 75]"
+        [pageSize]="10" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </ng-container>
+
+</app-page>

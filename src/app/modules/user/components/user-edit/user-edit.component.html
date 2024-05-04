@@ -1,0 +1,121 @@
+<app-page [showAddBtn]="false" [showRefreshBtn]="false" title="Editar Usuario">
+  <ng-container content>
+    <div class="form-container">
+      <form (ngSubmit)="updateUser()" *ngIf="userForm" [formGroup]="userForm">
+        <div class="form-row">
+          <div class="col-12 col-md-6 flex flex-col">
+            <mat-form-field appearance="fill">
+              <mat-label>Nombre:</mat-label>
+              <input formControlName="first_name" matInput type="text">
+              <mat-error
+                *ngIf="userForm.get('first_name').hasError('required') &&userForm.get('first_name').touched"></mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Apellidos:</mat-label>
+              <input formControlName="last_name" matInput type="text">
+              <mat-error
+                *ngIf="userForm.get('last_name').hasError('required') &&userForm.get('last_name').touched"></mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Usuario:</mat-label>
+              <input formControlName="username" matInput type="text">
+              <mat-error
+                *ngIf="userForm.get('username').hasError('required') &&userForm.get('username').touched"></mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Teléfono:</mat-label>
+              <input formControlName="phone_number" matInput type="text">
+              <mat-error
+                *ngIf="userForm.get('phone_number').hasError('required') &&userForm.get('phone_number').touched"></mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Correo Electrónico:</mat-label>
+              <input formControlName="email" matInput type="text">
+              <mat-error
+                *ngIf="userForm.get('email').hasError('required') &&userForm.get('email').touched"></mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Grupos</mat-label>
+              <mat-select formControlName="groups" multiple required>
+                <mat-option *ngFor="let grupo of grupos"
+                            [value]="grupo.id">{{grupo.name}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="userForm.get('groups').hasError('required')">Debe asignar al menos un rol.</mat-error>
+
+            </mat-form-field>
+
+
+          </div>
+          <div class="col-12 col-md-6 flex flex-col">
+            <mat-form-field appearance="fill" class="" floatLabel="always">
+              <mat-label>Avatar</mat-label>
+
+              <div hidden>
+                <input #avatar (change)="selectAvatar(avatar)" accept="image/*" id="imagenPortada" type="file">
+                <input #dummy hidden matInput required type="tetx">
+
+              </div>
+              <div class="file-info">
+
+                <div class="img-container">
+                  <img *ngIf="selectedAvatar" [src]="selectedAvatar" alt="" height="180" width="320">
+                </div>
+              </div>
+
+              <button (click)="openSelectAvatar(avatar, $event)" class="admin-button mt-2" color="primary"
+                      mat-raised-button>
+                Cargar
+              </button>
+            </mat-form-field>
+            <mat-form-field appearance="fill" floatLabel="always">
+              <mat-label>Super-Usuario</mat-label>
+              <mat-slide-toggle color="primary" formControlName="is_superuser">
+              </mat-slide-toggle>
+              <textarea hidden matInput></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" floatLabel="always">
+              <mat-label>Staff</mat-label>
+              <mat-slide-toggle color="primary" formControlName="is_staff">
+              </mat-slide-toggle>
+              <textarea hidden matInput></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" floatLabel="always">
+              <mat-label>Activo</mat-label>
+              <mat-slide-toggle color="primary" formControlName="is_active">
+              </mat-slide-toggle>
+              <textarea hidden matInput></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill" floatLabel="always">
+              <mat-label>Baja</mat-label>
+              <mat-slide-toggle color="primary" formControlName="baja">
+              </mat-slide-toggle>
+              <textarea hidden matInput></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill" floatLabel="always">
+              <mat-label>Registrado</mat-label>
+              <mat-slide-toggle color="primary" formControlName="registrado">
+              </mat-slide-toggle>
+              <textarea hidden matInput></textarea>
+            </mat-form-field>
+
+
+          </div>
+
+
+        </div>
+        <div class="responsive-section self-end">
+          <button color="warn" mat-flat-button routerLink="/usuarios" type="button">Cancelar</button>
+          <button color="primary" mat-raised-button type="submit">Guardar</button>
+        </div>
+
+      </form>
+    </div>
+  </ng-container>
+</app-page>

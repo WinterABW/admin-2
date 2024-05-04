@@ -1,0 +1,11 @@
+.stat-card {
+  @apply shadow-sm border-l-4 bg-white hover:shadow-lg transition-shadow;
+}
+
+.stat-card-label {
+  @apply text-sm text-gray-500;
+}
+
+.stat-card-number {
+  @apply text-2xl font-bold text-gray-900;
+}

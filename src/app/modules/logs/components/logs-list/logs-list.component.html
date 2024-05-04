@@ -1,0 +1,110 @@
+<app-page (refreshClicked)="getList()" [showAddBtn]="false" title="Registro de eventos">
+  <ng-container filters>
+    <form [formGroup]="filters" class="flex flex-col md:flex-row items-center md:space-x-4">
+      <mat-form-field>
+        <mat-label>Operacion</mat-label>
+        <mat-select class="w-full" formControlName="accion">
+          <mat-option value="">TODAS</mat-option>
+          <mat-option value="CREATE">CREATE</mat-option>
+          <mat-option value="UPDATE">UPDATE</mat-option>
+          <mat-option value="DELETE">DELETE</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Usuario</mat-label>
+        <input formControlName="usuario__contains" matInput type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Ip</mat-label>
+        <input formControlName="ip__contains" matInput type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Modelo</mat-label>
+        <input formControlName="modelo__contains" matInput type="text">
+      </mat-form-field>
+    </form>
+  </ng-container>
+
+  <ng-container content>
+    <div class=" hidden lg:block">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+      <mat-table (matSortChange)="sortBy($event)" [dataSource]="logs" mat-table matSort>
+
+        <!-- ID Column -->
+        <ng-container cdkColumnDef="id">
+          <mat-header-cell *cdkHeaderCellDef>ID</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            {{element.id}}
+          </mat-cell>
+        </ng-container>
+
+        <!-- Accion Column -->
+        <ng-container cdkColumnDef="accion">
+          <mat-header-cell *cdkHeaderCellDef>OPERACION</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            {{element.accion}}
+          </mat-cell>
+        </ng-container>
+
+        <!-- Usuario Column -->
+        <ng-container cdkColumnDef="usuario">
+          <mat-header-cell *cdkHeaderCellDef>USUARIO</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            {{element.usuario}}
+          </mat-cell>
+        </ng-container>
+
+        <!-- URL Column -->
+        <ng-container cdkColumnDef="url">
+          <mat-header-cell *cdkHeaderCellDef>URL</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            {{element.url}}
+          </mat-cell>
+        </ng-container>
+
+        <!-- IP Column -->
+        <ng-container cdkColumnDef="ip">
+          <mat-header-cell *cdkHeaderCellDef>IP</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            {{element.ip}}
+          </mat-cell>
+        </ng-container>
+
+        <!-- Fecha Column -->
+        <ng-container cdkColumnDef="fecha">
+          <mat-header-cell *cdkHeaderCellDef>FECHA</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            {{element.fecha}}
+          </mat-cell>
+        </ng-container>
+
+        <!-- Datos Column -->
+        <ng-container cdkColumnDef="datos">
+          <mat-header-cell *cdkHeaderCellDef>DATOS</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            {{element.datos}}
+          </mat-cell>
+        </ng-container>
+
+        <!-- Modelo Column -->
+        <ng-container cdkColumnDef="modelo">
+          <mat-header-cell *cdkHeaderCellDef>MODELO</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            {{element.modelo}}
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *cdkRowDef="let row; columns: displayedColumns" class="example-element-row"></mat-row>
+      </mat-table>
+
+      <mat-paginator (page)="paginate($event)" [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <div class="block lg:hidden">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+      <mat-paginator (page)="paginate($event)" [length]="totalCount" [pageSizeOptions]="[10, 30, 50, 75]"
+        [pageSize]="10" showFirstLastButtons></mat-paginator>
+    </div>
+  </ng-container>
+</app-page>

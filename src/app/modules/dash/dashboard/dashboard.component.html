@@ -1,0 +1,37 @@
+<app-page [showAddBtn]="false" [showRefreshBtn]="false" title="Dashboard">
+  <ng-container content>
+    <div class="filter-menu w-full flex items-center">
+      <mat-menu #appMenu="matMenu">
+        <button (click)="filterByDate(7)" mat-menu-item>Últimos 7 días</button>
+        <button (click)="filterByDate(30)" mat-menu-item>Último mes</button>
+        <button (click)="filterByDate(90)" mat-menu-item>Últimos 3 meses</button>
+        <button (click)="filterByDate(365)" mat-menu-item>Último año</button>
+        <button (click)="filterByDate(0)" mat-menu-item>Desde siempre</button>
+        <button (click)="filterByDate(-1)" mat-menu-item>Personalizado</button>
+      </mat-menu>
+      <button [matMenuTriggerFor]="appMenu" class="ml-auto" mat-button>
+        <mat-icon>filter_list</mat-icon>
+        Filtrar
+      </button>
+    </div>
+    <ng-container *ngIf="!authService.isAdmin && !authService.hasPermission('view_dashboard_exclusive_usuario')">
+      <app-publication-dash *ngIf="complete" [data]="publicationData" [cards]="cards"></app-publication-dash>
+    </ng-container>
+    
+    <ng-container *ngIf="authService.isAdmin || authService.hasPermission('view_dashboard_exclusive_usuario')">
+      <mat-tab-group>
+        <mat-tab label="Resumen">
+          <ng-template matTabContent>
+            <app-publication-dash *ngIf="complete" [data]="publicationData" [cards]="cards"></app-publication-dash>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Estadísticas">
+          <ng-template matTabContent>
+            <app-graph-dash [canalData]="canalData" [data]="publicationData" [usersData]="usersData"></app-graph-dash>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
+
+  </ng-container>
+</app-page>

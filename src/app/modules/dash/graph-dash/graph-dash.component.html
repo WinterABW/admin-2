@@ -1,0 +1,37 @@
+<div class="uppercase font-weight-bold tracking-tighter text-lg mt-3">Usuarios</div>
+<div [@listAnimation]="cards.length" class="grid grid-flow-row md:grid-flow-col  auto-cols-fr gap-4 py-4">
+  <app-stat-card *ngFor="let card of cards" [color]="card.color" [icon]="card.icon" [label]="card.label"
+    [number]="card.number"></app-stat-card>
+</div>
+
+<div class="grid gap-4  grid-flow-row grid-cols-2 auto-cols-fr py-6">
+  <app-list-card *ngIf="canalData" class="col-span-2">
+    <ng-container content>
+      <app-chart-card [labels]="['Publicados', 'Privados']" [series]="[canalData.publicados, canalData.noPublicados]"
+        title="Canales" type="donut"></app-chart-card>
+    </ng-container>
+  </app-list-card>
+  <app-list-card *ngIf="data.mas_vistas.length">
+    <ng-container content>
+      <app-chart-card [categories]="mv.labels" [series]="mv.series" title="Lo más visto" type="bar"></app-chart-card>
+    </ng-container>
+  </app-list-card>
+  <app-list-card *ngIf="data.mas_descargadas.length">
+    <ng-container content>
+      <app-chart-card [categories]="md.labels" [series]="md.series" title="Lo más descargado"
+        type="bar"></app-chart-card>
+    </ng-container>
+  </app-list-card>
+  <app-list-card *ngIf="data.mas_comentadas.length">
+    <ng-container content>
+      <app-chart-card [categories]="mc.labels" [series]="mc.series" title="Lo más comentado"
+        type="bar"></app-chart-card>
+    </ng-container>
+  </app-list-card>
+  <app-list-card *ngIf="data.mas_likes.length">
+    <ng-container content>
+      <app-chart-card [categories]="ml.labels" [series]="ml.series" title="Lo más gustado" type="bar"></app-chart-card>
+    </ng-container>
+  </app-list-card>
+
+</div>

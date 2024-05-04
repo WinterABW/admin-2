@@ -1,0 +1,128 @@
+<form (ngSubmit)="save()" [formGroup]="form" #ngForm="ngForm" class="grid grid-cols-none md:grid-cols-2 gap-6">
+  <div class="flex justify-center items-center my-4 md:col-span-2">
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label>Tipo</mat-label>
+      <input hidden matInput type="text">
+      <mat-button-toggle-group formControlName="type">
+        <mat-button-toggle value="NATURAL">Natural</mat-button-toggle>
+        <mat-button-toggle value="LEGAL">Jurídico</mat-button-toggle>
+      </mat-button-toggle-group>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="fill" floatLabel="auto">
+    <mat-label>Nombre(s) y Apellidos</mat-label>
+    <input formControlName="name" matInput required type="text">
+    <mat-error *ngIf="(form.get('name').touched || ngForm.submitted) && form.get('name').hasError('required')">El nombre
+      es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="type === 'LEGAL'" appearance="fill" floatLabel="auto">
+    <mat-label>Código REUUP</mat-label>
+    <input formControlName="reuup" matInput required type="text">
+    <mat-error *ngIf="(form.get('name').touched || ngForm.submitted) && form.get('reuup').hasError('required')">El
+      Código REUUP es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="type === 'NATURAL'" appearance="fill" floatLabel="auto">
+    <mat-label>Carnet de identidad</mat-label>
+    <input formControlName="ci" matInput maxlength="11" required type="text">
+    <mat-error *ngIf="form.get('ci').hasError('required') && (form.get('ci').touched || ngForm.submitted)">El canet de
+      identidad es obligatorio</mat-error>
+    <mat-error
+      *ngIf="(form.get('ci').touched || ngForm.submitted) && (form.get('ci').hasError('minlength') || form.get('ci').hasError('maxlength') )">El
+      canet de identidad debe tener 11 dígitos</mat-error>
+    <mat-error *ngIf="(form.get('ci').touched || ngForm.submitted) && form.get('ci').hasError('pattern')">Solo debe
+      contener números.</mat-error>
+    <mat-error *ngIf="(form.get('ci').touched || ngForm.submitted) && form.get('ci').hasError('underage')">Debe ser
+      mayor de edad.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" floatLabel="auto">
+    <mat-label>Correo</mat-label>
+    <input formControlName="email" matInput required type="email">
+    <mat-error *ngIf="(form.get('email').touched || ngForm.submitted) && form.get('email').hasError('required')">El
+      correo es obligatorio</mat-error>
+  </mat-form-field>
+
+  <ng-select (change)="selectProvince($event)" [items]="provinces$ | async" [loading]="loadingProvinces"
+    [searchable]="true" appearance="fill" bindLabel="name" bindValue="id" formControlName="province"
+    placeholder="Provincias">
+  </ng-select>
+  <ng-select [items]="municipalities$ | async" [loading]="loadingMunicipalities" appearance="fill" bindLabel="name"
+    bindValue="id" formControlName="municipality" placeholder="Municipios">
+  </ng-select>
+  <mat-form-field appearance="fill" floatLabel="auto">
+    <mat-label>{{type === 'NATURAL' ? 'Dirección' : 'Domicilio Legal'}}</mat-label>
+    <input formControlName="address" matInput required type="text">
+    <mat-error *ngIf="(form.get('address').touched || ngForm.submitted) && form.get('address').hasError('required')">La
+      dirección es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" floatLabel="auto">
+    <mat-label>Tarjeta Bancaria</mat-label>
+    <input formControlName="account" matInput [required]="type === 'NATURAL'" type="text" minlength="16" maxlength="16">
+    <mat-error *ngIf="(form.get('account').touched || ngForm.submitted) && form.get('account').hasError('required')">La
+      cuenta es obligatoria</mat-error>
+    <mat-error *ngIf="(form.get('account').touched || ngForm.submitted) && form.get('account').hasError('pattern')">Solo
+      debe contener números.</mat-error>
+    <mat-error
+      *ngIf="(form.get('account').touched || ngForm.submitted) && form.get('account').hasError('minlength')">Debe
+      contener 16 números.</mat-error>
+    <mat-error
+      *ngIf="(form.get('account').touched || ngForm.submitted) && form.get('account').hasError('maxlength')">Debe
+      contener 16 números.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" floatLabel="auto">
+    <mat-label>Cuenta Bancaria</mat-label>
+    <input formControlName="bank_card" matInput required type="text">
+    <mat-error
+      *ngIf="(form.get('bank_card').touched || ngForm.submitted) && form.get('bank_card').hasError('required')">La
+      cuenta es obligatoria</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="type === 'NATURAL'" appearance="fill" floatLabel="auto">
+    <mat-label>Número de licencia CP</mat-label>
+    <input formControlName="license" matInput required type="text">
+    <mat-error *ngIf="(form.get('license').touched || ngForm.submitted) && form.get('license').hasError('required')">El
+      número de licencia CP es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="type === 'NATURAL'" appearance="fill" floatLabel="auto">
+    <mat-label>Código NIT</mat-label>
+    <input formControlName="nit" matInput required type="text">
+    <mat-error *ngIf="(form.get('nit').touched || ngForm.submitted) && form.get('nit').hasError('required')">El código
+      NIT es obligatorio</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" floatLabel="auto">
+    <mat-label>Sucursal bancaria</mat-label>
+    <input formControlName="bank_branch" matInput required type="text">
+    <mat-error
+      *ngIf="(form.get('bank_branch').touched || ngForm.submitted) && form.get('bank_branch').hasError('required')">La
+      sucursal bancaria es obligatoria</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" floatLabel="auto">
+    <mat-label>Código streaming</mat-label>
+    <input formControlName="provider_streaming" matInput type="text" required>
+    <mat-error
+      *ngIf="(form.get('provider_streaming').touched || ngForm.submitted) && form.get('provider_streaming').hasError('pattern')">Solo
+      debe contener números.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" floatLabel="auto">
+    <mat-label>Código descarga</mat-label>
+    <input formControlName="provider_download" matInput type="text" required>
+    <mat-error
+      *ngIf="(form.get('provider_download').touched || ngForm.submitted) && form.get('provider_download').hasError('pattern')">Solo
+      debe contener números.</mat-error>
+  </mat-form-field>
+
+  <div class="flex sm:flex-row sm:justify-start sm:items-center sm:gap-4">
+    <button color="warn" mat-flat-button routerLink="/seller">Cancelar</button>
+    <button color="primary" mat-flat-button type="submit">Guardar</button>
+  </div>
+
+</form>
