@@ -17,10 +17,10 @@
                     href="https://www.picta.cu/medias/{{publicacion.slug_url}}">{{publicacion.nombre}}</a></h3>
                 <p matListItemLine>
                   <span>{{publicacion.canal.nombre}}</span>
-                  <span class=""> - {{ publicacion.fecha_creacion| date: 'd/L/yyyy h:mm a'}}</span>
-                </p>
-                <p matListItemLine matTooltip="{{publicacion.descripcion}}">
-                  {{ publicacion.descripcion ? publicacion.descripcion : 'Sin descripión' }}
+                  <span class="demo-2"> - {{ publicacion.fecha_creacion| date: 'd/L/yyyy h:mm a'}}</span>
+                  <br>
+                  <span matTooltip="{{publicacion.descripcion}}">
+                    {{ publicacion.descripcion ? publicacion.descripcion : 'Sin descripión' }}</span>
                 </p>
               </mat-list-item>
             </ng-container>
@@ -42,9 +42,10 @@
                 <p matListItemLine>
                   <span>{{comment.publicacion.nombre}}</span>
                   <span class="demo-2"> - {{comment.fecha | date: 'd/L/yyyy h:mm a'}}</span>
-                </p>
-                <p matListItemLine matTooltip="{{comment.texto}}">
-                  {{comment.texto}}
+                  <br>
+                  <span matTooltip="{{comment.texto}}">
+                    {{comment.texto}}
+                  </span>
                 </p>
               </mat-list-item>
             </ng-container>
@@ -65,10 +66,8 @@
               <h3 matListItemTitle>{{user.username}}</h3>
               <p matListItemLine>
                 <span>{{user.phone_number}}</span>
-                <span class="demo-2"> - {{user.date_joined | date: 'd/L/yyyy h:mm a'}}</span>
-              </p>
-              <p matListItemLine matTooltip="{{user.username}}">
-                {{user.username}}
+                <br>
+                <span>{{user.date_joined | date: 'd/L/yyyy h:mm a'}}</span>
               </p>
             </mat-list-item>
           </ng-container>
