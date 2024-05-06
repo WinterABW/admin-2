@@ -19,57 +19,72 @@ export const AppRoutes: Routes = [
         path: '',
         redirectTo: '/dashboard',
         pathMatch: 'full'
+      }, {
+        path: 'dash',
+        loadChildren: () => import('./modules/dash/dash.module').then(m => m.DashModule),
       },
       {
-        path: 'security',
-        loadChildren: () => import('./modules/security/security.module').then(m => m.SecurityModule),
+        path: 'sales',
+        loadChildren: () => import('./modules/sales/sales.module').then(m => m.SalesModule),
       },
       {
-        path: 'tipologias',
-        loadChildren: () => import('./modules/tipologia/tipologia.module').then(m => m.TipologiaModule),
+        path: 'incomes',
+        loadChildren: () => import('./modules/incomes/incomes.module').then(m => m.Incomes),
       },
       {
-        path: 'genero',
-        loadChildren: () => import('./modules/genero/genero.module').then(m => m.GeneroModule),
+        path: 'publicaciones',
+         loadChildren: () => import('./modules/publicacion/publicacion.module').then(m => m.PublicacionModule),
+      },
+      {
+        path: 'series',
+        loadChildren: () => import('./modules/serie/serie.module').then(m => m.SerieModule),
+      },
+      {
+        path: 'playlist',
+        loadChildren: () => import('./modules/playlist/playlist.module').then(m => m.PlaylistModule),
+      },
+      {
+        path: 'denuncias',
+        loadChildren: () => import('./modules/denuncia/denuncia.module').then(m => m.DenunciaModule),
+      },
+      {
+        path: 'canal',
+        loadChildren: () => import('./modules/canal/canal.module').then(m => m.CanalModule),
+      },
+      {
+        path: 'live',
+        loadChildren: () => import('./modules/live/live.module').then(m => m.LiveModule),
+      },
+      {
+        path: 'comentarios',
+        loadChildren: () => import('./modules/comentario/comentario.module').then(m => m.ComentarioModule),
+      },
+      {
+        path: 'temporadas',
+        loadChildren: () => import('./modules/temporada/temporada.module').then(m => m.TemporadaModule),
+      },
+      {
+        path: 'events',
+        loadChildren: () => import('./modules/event/event.module').then(m => m.EventModule),
+      }, {
+        path: 'solicitud',
+        loadChildren: () => import('./modules/solicitud/solicitud.module').then(m => m.SolicitudModule),
+      },
+      {
+        path: 'solicitud-canal',
+        loadChildren: () => import('./modules/solicitud-canal/solicitud-canal.module').then(m => m.SolicitudCanalModule),
+      }, 
+      {
+        path: 'votes',
+        loadChildren: () => import('./modules/vote/vote.module').then(m => m.VoteModule),
       },
       {
         path: 'faqs',
         loadChildren: () => import('./modules/faq/faq.module').then(m => m.FaqModule),
       },
       {
-        path: 'visitas',
-        loadChildren: () => import('./modules/visita/visita.module').then(m => m.VisitaModule),
-      },
-      {
-        path: 'seller',
-        loadChildren: () => import('./modules/seller/seller.module').then(m => m.SellerModule),
-      },
-      {
         path: 'logs',
         loadChildren: () => import('./modules/logs/logs.module').then(m => m.LogsModule),
-      },
-      {
-        path: 'ofertas',
-        loadChildren: () => import('./modules/offer/offer.module').then(m => m.OfferModule),
-      },
-      {
-        path: 'portada',
-        loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
-      },{
-        path: 'usuarios',
-        loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule),
-      },
-      {
-        path: 'plan',
-        loadChildren: () => import('./modules/plan/plan.module').then(m => m.PlanModule),
-      },
-      {
-        path: 'user-playlist',
-        loadChildren: () => import('./modules/user-playlist/user-playlist.module').then(m => m.UserPlaylistModule),
-      },
-      {
-        path: 'dash',
-        loadChildren: () => import('./modules/dash/dash.module').then(m => m.DashModule),
       },
       {
         path: '',

@@ -1,0 +1,120 @@
+<form #myform="ngForm" [formGroup]="form" class="flex flex-col">
+  <div class="form-row">
+    <div class="col-12 col-md-6 comunes">
+      <mat-form-field appearance="fill" class="mt-3">
+        <mat-label>Nombre</mat-label>
+        <input formControlName="nombre" matInput type="text">
+      </mat-form-field>
+
+      <div class="form-row">
+        <div class="col-12 col-md-4 comunes">
+          <mat-form-field appearance="fill" class="mt-3">
+            <mat-label>Método de pago</mat-label>
+            <mat-select formControlName="payment_type" placeholder="Seleccione el método de pago" required>
+              <mat-option selected value="picta">Picta</mat-option>
+              <mat-option value="externo">Externo</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4 comunes">
+          <mat-form-field appearance="fill" class="mt-3">
+            <mat-label>Precio</mat-label>
+            <input formControlName="precio" [value]="1" matInput placeholder="Valor" type="number">
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4 comunes">
+          <mat-form-field appearance="fill" class="mt-3">
+            <mat-label>Mulstisesión</mat-label>
+            <input formControlName="multisesesion" [value]="1" matInput placeholder="Valor" type="number">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="col-12 col-md-12 comunes">
+          <ng-select
+              [class.invalid-select]="(form.get('canal').touched || myform.submitted) &&form.get('canal').hasError('required')"
+              [items]="canales$|async"
+              [searchable]="true"
+              [virtualScroll]="true"
+              (change)="selectCanal($event)"
+              appearance="fill"
+              appendTo="body"
+              bindLabel="nombre"
+              bindValue="id"
+
+              formControlName="canal" placeholder="Canal *">
+            </ng-select>
+            <mat-error *ngIf="(form.get('canal').touched || myform.submitted) &&form.get('canal').hasError('required')">
+              El
+              canal es requerido.
+            </mat-error>
+        </div>
+      </div>
+
+      <mat-form-field appearance="fill" floatLabel="always" class="mt-3">
+        <mat-label>Importar</mat-label>
+        <input hidden matInput type="text">
+        <input #file (change)="selectFile($event)" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden type="file">
+        <h4 *ngIf="selectedFile" class="mb-2 font-bold">{{selectedFile.name}}</h4>
+        <div class="flex space-x-3">
+          <button (click)="file.click()" color="primary" mat-flat-button type="button">Seleccionar</button>
+          <button [mat-menu-trigger-for]="popUp" mat-icon-button matTooltip="Ayuda">
+            <mat-icon class="text-secondary">help</mat-icon>
+          </button>
+          <mat-menu #popUp="matMenu">
+            <a href="assets/Plantilla%20evento.xlsx" mat-menu-item> Descargar plantilla </a>
+          </mat-menu>
+        </div>
+      </mat-form-field>
+
+    </div>
+
+    <div class="col-12 col-md-6 comunes">
+
+      <mat-form-field appearance="fill" class="mt-3">
+        <mat-label>Usuarios asociados</mat-label>
+        <mat-chip-grid #chipListUser required>
+          <!-- <mat-chip (removed)="removeUser(user)" *ngFor="let user of this.selectedUsuarios" [removable]="true"
+                    [selectable]="true">
+            {{user}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>-->
+        </mat-chip-grid>
+        <mat-error *ngIf="chipListUser.errorState">Debe seleccionar al menos un usuario.</mat-error>
+        <input #userInput (matChipInputTokenEnd)="addUser($event)" [formControl]="usersCtrl" [matAutocomplete]="users" [matChipInputAddOnBlur]="false" [matChipInputFor]="chipListUser" [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+        <mat-autocomplete #users="matAutocomplete" (optionSelected)="selectedUser($event,userInput)">
+          <mat-option *ngFor="let user of usersFiltrados |async" [value]="user"> {{user.username}} </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <h3>Usuarios</h3>
+      
+        <mat-list>
+          <mat-list-item *ngFor="let user of selectedUsuarios; let index = index" class="border-b">
+            <mat-icon mat-list-icon>face</mat-icon>
+            <div mat-line> {{user}} </div>
+            <button (click)="removeUser(user)" color="warn" mat-icon-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+          <mat-list-item *ngFor="let user of usernames; let index = index" class="border-b border-t">
+            <mat-icon mat-list-icon>face</mat-icon>
+            <div mat-line> {{user.Usuario}} </div>
+            <button (click)="removeUsername(index)" color="warn" mat-icon-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+
+      <ng-template #noUsers>
+        <div class="text-secondary font-bold border w-full p-4 my-4">Listado vacío</div>
+      </ng-template>
+    </div>
+  </div>
+</form>
+
+<div class="responsive-section">
+  <button color="warn" mat-flat-button routerLink="/events">Cancelar</button>
+  <button (click)="save()" color="primary" mat-flat-button>Guardar</button>
+</div>

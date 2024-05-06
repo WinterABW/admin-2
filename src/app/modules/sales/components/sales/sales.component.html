@@ -1,0 +1,94 @@
+<app-page (refreshClicked)="load()" [showAddBtn]="false" title="Ventas">
+  <ng-container filters>
+    <form [formGroup]="salesFilters">
+      <div class="flex flex-col gap-10">
+        <div class="flex flex-row align-middle justify-between">
+          <mat-form-field floatLabel="auto">
+            <mat-label>Fecha</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input formControlName="date__gte" matStartDate placeholder="Inicio"
+                (dateChange)="startDateChanged($event)">
+              <input formControlName="date__lt" matEndDate placeholder="Fin" (dateChange)="endDateChanged($event)">
+            </mat-date-range-input>
+            <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+
+          <ng-select (change)="selectPublication($event)" (close)="loadPublicaciones('')" (search)="searchPub($event)"
+            [clearSearchOnAdd]="true" [multiple]="false" [searchable]="true" appearance="fill" bindLabel="nombre"
+            class="w-1/4" [placeholder]="isSelected ? '' : 'Publicaciones'">
+            <ng-option *ngFor="let pub of pubList" [value]="pub">{{pub.nombre}}</ng-option>
+          </ng-select>
+
+          <ng-select [clearable]="false" [items]="canales$|async" [markFirst]="true" [searchable]="true"
+            [virtualScroll]="true" floatLabel="none" appearance="fill" bindLabel="nombre" bindValue="id"
+            formControlName="channel_id" placeholder="Canal" style="min-width: 200px;">
+          </ng-select>
+
+          <div class="flex flex-row align-middle justify-around h-14">
+            <mat-button-toggle-group aria-label="Periodo" formControlName="period">
+              <mat-button-toggle value="day">Diario</mat-button-toggle>
+              <mat-button-toggle value="month">Mensual</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <button (click)="exportTable()" class="page-btn" mat-button><mat-icon
+              class="mr-1">file_download_outline</mat-icon>Exportar Ventas
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+
+  <ng-container content>
+    <div class="grid md:grid-cols-2 gap-2">
+      <div class="flex flex-col bg-white rounded-lg p-2">
+        <div class="flex space-x-4 items-center mb-2">
+          <mat-icon class="text-red-500">live_tv</mat-icon>
+          <h2 class=" font-bold text-2xl">Reproducción</h2>
+        </div>
+        <div class="grid grid-flow-row md:grid-flow-col auto-cols-fr gap-2">
+          <app-stat-card [number]="salesCountByReproduccion" color="blue" label="Ventas"></app-stat-card>
+          <app-stat-card [number]="generalAmountByReproduccion" color="green" label="Total" icon=""></app-stat-card>
+          <app-stat-card [number]="etecsaPercentByReproduccion" color="yellow" label="Etecsa" icon=""></app-stat-card>
+          <app-stat-card [number]="disqueraPercentByReproduccion" color="purple" label="Disquera"
+            icon=""></app-stat-card>
+          <app-stat-card [number]="bancoPercentByReproduccion" color="red" label="Banco" icon=""></app-stat-card>
+        </div>
+        <div class="mt-4 h-80">
+          <ngx-charts-line-chart *ngIf="salesByReproduccion?.length && salesChartDataByReproduccion; else noData"
+            [gradient]="true" [results]="salesChartDataByReproduccion" [showXAxisLabel]="false" [showYAxisLabel]="false"
+            [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel" [legend]="true" [legendTitle]="legendTitle"
+            [roundDomains]="roundDomains" [autoScale]="autoScale" [xAxis]="true" [yAxis]="true">
+          </ngx-charts-line-chart>
+        </div>
+      </div>
+      <div class="flex flex-col bg-white rounded-lg p-2">
+        <div class="flex space-x-4 items-center mb-2">
+          <mat-icon class="text-blue-600">file_download</mat-icon>
+          <h2 class=" font-bold text-2xl">Descarga</h2>
+        </div>
+        <div class="grid grid-flow-row md:grid-flow-col auto-cols-fr gap-2">
+          <app-stat-card [number]="salesCountByDescarga" color="blue" label="Ventas"></app-stat-card>
+          <app-stat-card [number]="generalAmountByDescarga" color="green" label="Total" icon=""></app-stat-card>
+          <app-stat-card [number]="etecsaPercentByDescarga" color="yellow" label="Etecsa" icon=""></app-stat-card>
+          <app-stat-card [number]="disqueraPercentByDescarga" color="purple" label="Disquera" icon=""></app-stat-card>
+          <app-stat-card [number]="bancoPercentByDescarga" color="red" label="Banco" icon=""></app-stat-card>
+        </div>
+        <div class="mt-4 h-80">
+          <ngx-charts-line-chart *ngIf="salesByDescarga?.length && salesChartDataByDescarga; else noData"
+            [legend]="true" [legendTitle]="legendTitle" [results]="salesChartDataByDescarga" [showXAxisLabel]="false"
+            [showYAxisLabel]="false" [autoScale]="autoScale" [roundDomains]="roundDomains" [xAxis]="true"
+            [yAxis]="true">
+          </ngx-charts-line-chart>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</app-page>
+<ng-template #noData>
+  <div class="flex items-center justify-center text-2xl space-x-3 p-3 text-gray-400 text-center">
+    <mat-icon [inline]="true">info</mat-icon>
+    <span>{{salesByReproduccion ? 'Sin datos' : 'Cargando Datos'}}</span>
+  </div>
+</ng-template>

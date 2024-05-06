@@ -1,0 +1,58 @@
+<section class="p-3 mat-typography">
+  <h1>{{operation === 1 ? 'Adicionar' : 'Editar'}} lista de reproducción</h1>
+  <form [formGroup]="form">
+    <div class="flex flex-col">
+      <ng-select [items]="canales" [searchable]="true" [virtualScroll]="true" appearance="fill" appendTo="body"
+        bindLabel="nombre" bindValue="id" formControlName="canal" placeholder="Canal">
+      </ng-select>
+      <mat-error *ngIf="form.controls['canal'].hasError('required')
+&& form.controls['canal'].dirty">
+        Debe seleccionar un canal
+      </mat-error>
+      <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Nombre</mat-label>
+        <input formControlName="nombre" matInput type="text">
+        <mat-error *ngIf="form.controls['nombre'].hasError('required')">
+          El nombre es requerido
+        </mat-error>
+      </mat-form-field>
+      <div *ngIf="operation === 2" class="flex-grow-1 mt-2">
+        <mat-button-toggle-group [formControl]="selectorControl" appearance="legacy" aria-label="Font Style"
+          name="contentSelector">
+          <mat-button-toggle value="publicacion">Publicación</mat-button-toggle>
+          <mat-button-toggle value="serie">Serie</mat-button-toggle>
+        </mat-button-toggle-group>
+        <ng-select (change)="add($event)" (search)="searchPub($event)" *ngIf="selectorControl.value ==='publicacion'"
+          [clearSearchOnAdd]="true" [formControl]="pubsControl" [multiple]="false" [searchable]="true"
+          appearance="fill" bindLabel="nombre" class="mt-2" placeholder="Publicaciones">
+          <ng-option *ngFor="let pub of filteredPubs" [value]="pub">{{pub.nombre}}</ng-option>
+        </ng-select>
+        <ng-select (change)="addSerie($event)" (close)="loadSeries()" (search)="searchSerie($event)"
+          *ngIf="selectorControl.value ==='serie'" [clearSearchOnAdd]="true" [formControl]="seriesControl"
+          [multiple]="false" [searchable]="true" appearance="fill" bindLabel="nombre" class="mt-2"
+          placeholder="Series">
+          <ng-option *ngFor="let serie of filteredSeries" [value]="serie.id">{{serie.serie.nombre + ' - ' +
+            serie.nombre}}</ng-option>
+        </ng-select>
+        <div (cdkDropListDropped)="drop($event)" cdkDropList class="selected-pubs mt-3">
+          <div *ngFor="let pub of selectedPubs; let index = index" cdkDrag class="pub-item">
+            <div class="flex justify-between w-full">
+              <span>
+                {{index + 1}} - {{pub.nombre }}
+              </span>
+              <mat-icon (click)="removeFromList(pub)" color="warn" matTooltip="Quitar de la lista">delete</mat-icon>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <mat-slide-toggle class="mt-2" color="primary" formControlName="publicado">Publicado</mat-slide-toggle>
+
+      <div class="flex justify-content-end items-center mt-3">
+        <button (click)="clickCancel()" class="mr-3" color="warn" mat-flat-button> Cancelar</button>
+        <button (click)="clickSave()" [disabled]="form.invalid?true: null" color="primary" mat-raised-button> Guardar
+        </button>
+      </div>
+    </div>
+  </form>
+</section>

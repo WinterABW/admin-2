@@ -1,0 +1,15 @@
+<mat-nav-list>
+  <a (click)="answer()" mat-list-item>
+    <mat-icon matListIcon>reply</mat-icon>
+    <span mat-line>Responder</span>
+  </a>
+  <a (click)="toggleVisibility()" mat-list-item>
+    <mat-icon matListIcon>{{ data.comment.publicado ? "visibility_off" : "visibility" }}</mat-icon>
+    <span mat-line>{{data.comment.publicado ? 'Ocultar' : 'Publicar'}}</span>
+  </a>
+  <a (click)="delete()" mat-list-item *ngIf="!data.comment.eliminado">
+    <mat-icon matListIcon color="warn">delete</mat-icon>
+    <span mat-line>Eliminar</span>
+  </a>
+</mat-nav-list>
+

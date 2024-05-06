@@ -1,0 +1,11 @@
+<form [formGroup]="form">
+  <mat-form-field appearance="fill">
+    <mat-label>Nombre</mat-label>
+    <input formControlName="nombre" matInput type="text">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Número de temporada</mat-label>
+    <input formControlName="numero" matInput type="text">
+  </mat-form-field>
+  <button (click)="save()" color="primary" mat-raised-button>Guardar</button>
+</form>

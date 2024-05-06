@@ -4,8 +4,8 @@ import { map } from 'rxjs/operators';
 import { UtilesService } from './utiles.service';
 import { environment } from 'src/environments/environment';
 
-const baseUrl = environment.baseUrl
-const baseUrlv2 = environment.baseUrlv2
+const baseUrl=environment.baseUrl
+const baseUrlv2=environment.baseUrlv2
 
 const URL = `${baseUrl}/genero/`;
 const URLv2 = `${baseUrlv2}/genero/`;

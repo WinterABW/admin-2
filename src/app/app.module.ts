@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
@@ -21,7 +21,6 @@ import { TokenInterceptorService } from './services/token-interceptor.service';
 import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
 import { environment } from 'src/environments/environment';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 
 const baseUrl = environment.baseUrl
 
@@ -59,7 +58,6 @@ const baseUrl = environment.baseUrl
       useValue: baseUrl,
     },
     { provide: MAT_DATE_LOCALE, useValue: 'es-CU' },
-    /* { provide: MatPaginatorIntl, useValue: getEsPaginatorIntl() }, */
   ],
   bootstrap: [AppComponent]
 })

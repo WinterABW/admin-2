@@ -17,7 +17,7 @@
                     href="https://www.picta.cu/medias/{{publicacion.slug_url}}">{{publicacion.nombre}}</a></h3>
                 <p matListItemLine>
                   <span>{{publicacion.canal.nombre}}</span>
-                  <span class="demo-2"> - {{ publicacion.fecha_creacion| date: 'd/L/yyyy h:mm a'}}</span>
+                  <span class=""> - {{ publicacion.fecha_creacion| date: 'd/L/yyyy h:mm a'}}</span>
                 </p>
                 <p matListItemLine matTooltip="{{publicacion.descripcion}}">
                   {{ publicacion.descripcion ? publicacion.descripcion : 'Sin descripión' }}

@@ -3,8 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { UtilesService } from './utiles.service';
 import { Observable } from 'rxjs';
 import { PictaResponse } from '../models/response.picta.model';
-import { ApiNotification } from '../models/api-notification';
 import { environment } from 'src/environments/environment';
+import { ApiNotification } from '../models/api-notification';
 
 const baseUrl = environment.baseUrl
 const baseUrlv2 = environment.baseUrlv2

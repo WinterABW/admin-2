@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
-const baseUrl = environment.baseUrl
-const baseUrlv2 = environment.baseUrlv2
+const baseUrl=environment.baseUrl
+const baseUrlv2=environment.baseUrlv2
 
 const urlSearchPublication = `${baseUrlv2}/publicacion/`;
 const urlSearchCanal = `${baseUrlv2}/canal/`;

@@ -1,0 +1,49 @@
+<app-page [showAddBtn]="false" [showRefreshBtn]="false" title="Adicionar Temporada">
+  <ng-container content>
+    <form [formGroup]="form" class="container">
+      <ng-select [clearable]="false"
+                 [items]="canales$|async"
+                 [markFirst]="true"
+                 [searchable]="true"
+                 [virtualScroll]="true"
+                 appearance="fill"
+                 appendTo="body"
+                 bindLabel="nombre"
+                 bindValue="id"
+                 formControlName="canal" placeholder="Canal">
+      </ng-select>
+      <mat-form-field appearance="fill" class="expand-1">
+        <mat-label>Serie</mat-label>
+        <mat-select formControlName="serie">
+          <mat-option *ngFor="let serie of series$|async" [value]="serie.pelser_id">{{serie.nombre}}</mat-option>
+
+        </mat-select>
+        <mat-error *ngIf="form.get('serie').hasError('required')">La serie es requerida.</mat-error>
+
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input formControlName="nombre" matInput type="text">
+        <mat-error *ngIf="form.get('nombre').hasError('required')">El nombre es requerido.</mat-error>
+
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Número de temporada</mat-label>
+        <input formControlName="numero" matInput type="text">
+        <mat-error *ngIf="form.get('numero').hasError('required')">El número es requerido.</mat-error>
+
+
+      </mat-form-field>
+      <!--<mat-form-field appearance="fill">
+        <mat-label>Cantidad de capítulos</mat-label>
+        <input formControlName="cant_cap" matInput type="text">
+      </mat-form-field>-->
+      <div class="responsive-section self-end">
+        <button color="warn" mat-flat-button routerLink="/temporadas">Cancelar</button>
+        <button (click)="save()" color="primary" mat-flat-button>Guardar</button>
+      </div>
+    </form>
+
+  </ng-container>
+</app-page>
+

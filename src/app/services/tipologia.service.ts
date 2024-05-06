@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Tipologia } from '../models/tipologia.model';
 import { environment } from 'src/environments/environment';
+import { Tipologia } from '../models/tipologia.model';
 
 const baseUrl=environment.baseUrl
 const url = `${baseUrl}/tipologia/`;
@@ -28,7 +28,7 @@ export class TipologiaService {
     return this.httpClient.delete(`${url}${id}`);
   }
 
-  getAll(): Observable<Tipologia[]> {
+  getAll(): Observable<any> {
     return this.httpClient.get<any>(url).pipe(pluck('results'));
   }
 

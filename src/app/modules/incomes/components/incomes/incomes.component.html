@@ -1,0 +1,128 @@
+<app-page (refreshClicked)="load()" [showAddBtn]="false" title="Ingresos">
+  <ng-container filters>
+    <div class="flex justify-end"></div>
+    <form [formGroup]="sellerForm">
+      <div class="mt-6 bg-white shadow-sm">
+        <form [formGroup]="paymentFilters">
+          <div class="grid grid-cols-8 gap-2">
+            <mat-form-field class="m-4 col-span-3">
+              <mat-label>Publicaciones</mat-label>
+              <mat-select [formControl]="pubControl" (selectionChange)="selectPublication($event.value)">
+                <mat-option *ngFor="let pub of pubList | async" [value]="pub">{{ pub.nombre }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field class="m-4 col-span-2">
+              <mat-label>Fecha</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input formControlName="date__gte" matStartDate placeholder="Inicio">
+                <input formControlName="date__lt" matEndDate placeholder="Fin">
+              </mat-date-range-input>
+              <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+
+            <mat-form-field class="m-4 col-span-1" floatLabel="always">
+              <mat-label>Estado</mat-label>
+              <mat-select formControlName="state">
+                <mat-option [value]="''">Todos</mat-option>
+                <mat-option [value]="'PENDING'">Pendientes</mat-option>
+                <mat-option [value]="'SUCCESS'">Completados</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div class="responsive-section justify-between m-4 col-span-1">
+              <button (click)="exportTable()" class="page-btn" mat-button><mat-icon
+                  class="mr-1">file_download_outline</mat-icon>Exportar</button>
+            </div>
+
+            <mat-button-toggle-group aria-label="Font Style" class="col-span-3 place-self-center"
+              formControlName="type">
+              <mat-button-toggle value="all">Todos</mat-button-toggle>
+              <mat-button-toggle value="payment">Pago</mat-button-toggle>
+              <mat-button-toggle value="donation">Premiación</mat-button-toggle>
+              <mat-button-toggle value="reproduccion">Reproducción</mat-button-toggle>
+              <mat-button-toggle value="descarga">Descarga</mat-button-toggle>
+            </mat-button-toggle-group>
+
+          </div>
+        </form>
+
+      </div>
+    </form>
+  </ng-container>
+
+  <ng-container content>
+    <div class="flex justify-end"></div>
+    <div class="mt-6">
+      <table [dataSource]="payments" mat-table style="width: 100%;">
+        <ng-container matColumnDef="date">
+          <th *matHeaderCellDef mat-header-cell>Fecha</th>
+          <td *matCellDef="let element" mat-cell>{{ element.date | date: 'd/M/yy, h:mm a' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="publicacion">
+          <th *matHeaderCellDef mat-header-cell>Publicación</th>
+          <td *matCellDef="let element" mat-cell>{{ element.items_data[0].item.description }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="amount">
+          <th *matHeaderCellDef mat-header-cell>Monto</th>
+          <td *matCellDef="let element" mat-cell>{{ element.amount }} {{ element.currency }}</td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="bank_id">
+          <th *matHeaderCellDef mat-header-cell>Banco</th>
+          <td *matCellDef="let element" mat-cell>{{ element.bank_id }}</td>
+        </ng-container> -->
+
+        <!-- <ng-container matColumnDef="id">
+          <th *matHeaderCellDef mat-header-cell>ID</th>
+          <td *matCellDef="let element" mat-cell>{{ element.id }}</td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="state">
+          <th *matHeaderCellDef mat-header-cell>Estado</th>
+          <td *matCellDef="let element" mat-cell>{{ element.state | titlecase }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="seller">
+          <th *matHeaderCellDef mat-header-cell>Vendedor</th>
+          <td *matCellDef="let element" mat-cell>{{ element.seller.name }}</td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="buyer">
+          <th *matHeaderCellDef mat-header-cell>Comprador</th>
+          <td *matCellDef="let element" mat-cell>{{ element.buyer }}</td>
+        </ng-container> -->
+
+        <!-- <ng-container matColumnDef="phone">
+          <th *matHeaderCellDef mat-header-cell>Teléfono</th>
+          <td *matCellDef="let element" mat-cell>{{ element?.extra_fields?.buyer_phone || '-'}}</td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="type">
+          <th *matHeaderCellDef mat-header-cell>Tipo</th>
+          <td *matCellDef="let element" mat-cell>
+            <div [ngSwitch]="element.type">
+              <span *ngSwitchCase="'donation'">Premiación</span>
+              <span *ngSwitchCase="'payment'">Pago</span>
+              <span *ngSwitchDefault>-</span>
+            </div>
+          </td>
+        </ng-container>
+        <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+        <tr class="mat-row w-full text-center block" *matNoDataRow>
+          <td class="mat-cell w-full h-full flex items-center justify-center" colspan="7">
+            {{ payments ? 'Lo sentimos, no hay registros que coincidan con los filtros de búsqueda.' : 'Cargando
+            datos...' }}
+          </td>
+        </tr>
+      </table>
+
+      <mat-paginator (page)="paginate($event)" [length]="total" [pageSizeOptions]="[10, 20]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </ng-container>
+</app-page>

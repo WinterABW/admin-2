@@ -1,0 +1,19 @@
+<mat-nav-list>
+  <a (click)="bsRef.dismiss()" [routerLink]="['/live/edit', data.live.id]" mat-list-item>
+    <mat-icon matListIcon>edit</mat-icon>
+    <span mat-line>Editar</span>
+  </a>
+  <a (click)="toggleVisibility()" mat-list-item>
+    <mat-icon matListIcon>{{ data.live.publicado ? "visibility_off" : "visibility" }}</mat-icon>
+    <span mat-line>{{data.live.publicado ? 'Ocultar' : 'Publicar'}}</span>
+  </a>
+  <a (click)="stopLive()" mat-list-item *ngIf="data.live.tipo==='live' && !data.live.convertido">
+    <mat-icon matListIcon>stop</mat-icon>
+    <span mat-line>Detener Directa</span>
+  </a>
+  <a (click)="delete()" mat-list-item>
+    <mat-icon matListIcon color="warn">delete</mat-icon>
+    <span mat-line>Eliminar</span>
+  </a>
+</mat-nav-list>
+

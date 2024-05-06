@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Comentarios</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-action-list>
+    <mat-list-item (click)="asnwerComment(comment)" *ngFor="let comment of data.comments"
+                   matTooltip="Responder comentario">
+
+      <img [src]="comment.usuario.avatar
+          ? comment.usuario.avatar+'_60x60'
+          : 'assets/img/user-placeholder.png'
+" alt="avatar" matListAvatar>
+      <h2 class="font-weight-bold" matLine> {{comment.usuario.username}} </h2>
+      <h3 class="text-muted" matLine> {{comment.fecha | date: 'd/L/yyyy h:mm a'}} </h3>
+      <p matLine>
+        <span class=""> {{comment.texto}} </span>
+      </p>
+      <!--<button *ngIf="comment.cantidad_respuestas" mat-button mat-stroked-button>
+        Ver {{comment.cantidad_respuestas}} {{comment.cantidad_respuestas > 1 ? 'respuestas' : 'respuesta'}}
+      </button>-->
+
+    </mat-list-item>
+  </mat-action-list>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="flex justify-between mat-typography items-center w-full">
+    <button color="warn" mat-button mat-dialog-close>Cerrar</button>
+    <span class="font-weight-bold">Total: {{data.total}} </span>
+
+  </div>
+</mat-dialog-actions>
+<ng-template #answerDialog>
+  <form (ngSubmit)="saveComment()" [formGroup]="commentForm">
+
+    <div class="flex flex-col">
+      <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Respuesta</mat-label>
+        <textarea formControlName="texto" matInput rows="5" type="text"></textarea>
+        <mat-error *ngIf="commentForm.get('texto').hasError('required')&& commentForm.get('texto').dirty">Campo
+          requerido
+        </mat-error>
+      </mat-form-field>
+      <button color="primary" mat-flat-button type="submit">
+        Aceptar
+      </button>
+    </div>
+  </form>
+</ng-template>

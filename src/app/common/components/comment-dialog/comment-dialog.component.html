@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div mat-dialog-content>
+  <textarea class="border-2 focus w-full h-40 text-lg" [(ngModel)]="observacion"></textarea>
+</div>
+<div mat-dialog-actions>
+  <button (click)="dialogRef.close()" mat-button>Cancelar</button>
+  <button [mat-dialog-close]="observacion" cdkFocusInitial mat-button>Enviar</button>
+</div>

@@ -1,0 +1,137 @@
+<app-page (refreshClicked)="load()" [showAddBtn]="false" [showRefreshBtn]="true" title="Comentarios">
+  <ng-container filters>
+    <form [formGroup]="filters" class="responsive-section flex justify-between gap-4 md:flex-col lg:flex-row">    
+      <mat-form-field>
+        <input formControlName="search" matInput placeholder="Usuario o Publicación" type="text">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="publicacion_nombre__contains" matInput placeholder="Publicación" type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="usuario_nombre__contains" matInput placeholder="Usuario" type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="eliminado">
+          <mat-option [value]="'all'">Todos</mat-option>
+          <mat-option [value]="true">Eliminado</mat-option>
+          <mat-option [value]="false">No eliminado</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </ng-container>
+
+  <ng-container content>
+    <div class="hidden lg:block">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+      <table [dataSource]="comentarios$" mat-table style="width: 100%;">
+      
+        <ng-container matColumnDef="status">
+          <th *matHeaderCellDef mat-header-cell class="">Estado</th>
+          <td *matCellDef="let element">
+            <mat-icon class="text-green-500" *ngIf="!element.eliminado">check_circle</mat-icon>
+            <mat-icon class="text-danger" *ngIf="element.eliminado" matTooltip="Eliminado">cancel</mat-icon>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="texto">
+          <th *matHeaderCellDef mat-header-cell> Texto</th>
+          <td *matCellDef="let element" class="text-sm text-black"> {{element.texto}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha">
+          <th *matHeaderCellDef mat-header-cell> Fecha</th>
+          <td *matCellDef="let element" class="text-sm text-black"> {{element.fecha|date:'d/L/yyyy h:mm a'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombre_usuario">
+          <th *matHeaderCellDef mat-header-cell>
+            <span class="p-3">
+              Usuario
+            </span>
+          </th>
+          <td *matCellDef="let element" class="text-sm text-black">
+            <span class="p-3">
+              {{element.usuario.username}}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="publicacion">
+          <th *matHeaderCellDef mat-header-cell> Publicación</th>
+          <td *matCellDef="let element" class="text-sm text-black"><a (click)="$event.stopImmediatePropagation();"
+              [href]="'https://www.picta.cu/medias/'+ element.publicacion.slug_url" target="_blank">
+              {{element.publicacion.nombre}}</a></td>
+        </ng-container>
+
+        <ng-container matColumnDef="publicado">
+          <th *matHeaderCellDef mat-header-cell> Publicado</th>
+          <td *matCellDef="let element" mat-cell>
+            <mat-slide-toggle (change)="togglePublicado(element.id, !element.publicado)"
+              (click)="$event.stopImmediatePropagation();" [checked]="element.publicado" [disabled]="disableToggle"
+              ariaLabel="Publicado" color="primary"></mat-slide-toggle>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="operations">
+          <th *matHeaderCellDef mat-header-cell> Acciones</th>
+          <td *matCellDef="let element" mat-cell>
+            <div class="buttons">
+              <button (click)="$event.stopImmediatePropagation();eliminarComentario(element)"
+                *ngIf="authService.hasPermission('delete_comentario') && !element.eliminado" color="warn"
+                mat-icon-button matTooltip="Eliminar comentario">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns;sticky: true" mat-header-row></tr>
+        <tr (click)="asnwerComment(row)" *matRowDef="let row; columns: displayedColumns;" mat-row
+          matTooltip="Click para responder este comentario" style="cursor: pointer"></tr>
+      </table>
+
+      <mat-paginator (page)="paginate($event)" [length]="total" [pageSizeOptions]="[10, 20]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+    <div class="block lg:hidden">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <mat-action-list *ngIf="comentarios$ | async as comentarios">
+        <mat-list-item (click)="openBottomSheet(comment)" *ngFor="let comment of comentarios"
+          [class.hidden-video]="comment.publicado || comment.eliminado" class="mat-card" style="height: auto">
+          <img *ngIf="comment.usuario.avatar" [src]="comment.usuario.avatar+'_100x100'" alt="" matListAvatar>
+          <img *ngIf="!comment.usuario.avatar" alt="" matListAvatar src="assets/img/user-placeholder.png" width="80">
+          <h3 matLine><strong>{{comment.usuario.username}}</strong> dijo: </h3>
+          <p class="text-wrap" matLine>
+            {{comment.texto}}
+          </p>
+          <p class="text-wrap text-muted" matLine>
+            Publicación: {{comment.publicacion.nombre}}
+          </p>
+        </mat-list-item>
+      </mat-action-list>
+      <mat-paginator (page)="paginate($event)" [length]="total" [pageSizeOptions]="[10, 20]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+    <ng-template #answerDialog>
+      <form (ngSubmit)="saveComment()" [formGroup]="commentForm">
+
+        <div class="flex flex-col">
+          <mat-form-field appearance="fill" floatLabel="auto">
+            <mat-label>Respuesta</mat-label>
+            <textarea formControlName="texto" matInput rows="5" type="text"></textarea>
+            <mat-error *ngIf="commentForm.get('texto').hasError('required')&& commentForm.get('texto').dirty">Campo
+              requerido
+            </mat-error>
+          </mat-form-field>
+          <button color="primary" mat-flat-button type="submit">
+            Aceptar
+          </button>
+        </div>
+      </form>
+    </ng-template>
+
+  </ng-container>
+</app-page>

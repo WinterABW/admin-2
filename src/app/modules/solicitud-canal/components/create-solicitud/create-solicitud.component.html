@@ -1,0 +1,6 @@
+<app-page [showAddBtn]="false" [showRefreshBtn]="false" title="Adicionar solicitud">
+  <ng-container content>
+    <app-solicitud-canal-form (saveForm)="create($event)"></app-solicitud-canal-form>
+
+  </ng-container>
+</app-page>

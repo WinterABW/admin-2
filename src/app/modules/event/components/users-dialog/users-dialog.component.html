@@ -1,0 +1,14 @@
+<h1 class="flex items-center justify-between border-b -mx-5 px-4 pb-4 mb-0" mat-dialog-title>
+  Listado de usuarios
+  <button mat-dialog-close mat-icon-button matTooltip="Cerrar">
+    <mat-icon>close</mat-icon>
+  </button>
+</h1>
+<mat-dialog-content>
+  <mat-list>
+    <mat-list-item *ngFor="let user of data.evento.usuarios; let index = index" class="border-b">
+      <mat-icon mat-list-icon>face</mat-icon>
+      <div mat-line> {{user.username}} </div>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>

@@ -1,0 +1,5 @@
+<div id="videoContainer" #videoContainer class="youtube-theme video-container">
+    <video #videoPlayer preload="auto" id="videoPlayer" poster="{{ publicacion?.url_imagen + '_1280x720' }}" >
+        <track label="Español" kind="subtitles" srclang="es" src="{{ publicacion?.url_subtitulo + '.vtt' }}" type="text/vtt" >
+    </video>
+</div>

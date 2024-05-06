@@ -1,0 +1,22 @@
+<mat-nav-list>
+  <!-- <a (click)="seeDetails()" mat-list-item>
+    <mat-icon matListIcon>list</mat-icon>
+    <span mat-line>Detalles</span>
+  </a>-->
+  <a (click)="bsRef.dismiss()" [routerLink]="['/solicitud/edit', data.solicitud.id]" mat-list-item>
+    <mat-icon matListIcon>edit</mat-icon>
+    <span mat-line>Editar</span>
+  </a>
+  <a (click)="toggleVisibility()" mat-list-item>
+    <mat-icon matListIcon>{{ data.solicitud.aceptada ? "cancel" : "check" }}</mat-icon>
+    <span mat-line>{{data.solicitud.aceptada ? 'Denegar' : 'Aceptar'}}</span>
+  </a>
+  <!--  <a (click)="toggleDownload()" mat-list-item>
+      <mat-icon matListIcon>{{ data.canal.descargable ? "block" : "get_app" }}</mat-icon>
+      <span mat-line>{{data.publicacion.descargable ? 'Bloquear descarga' : 'Permitir descarga'}}</span>
+    </a>-->
+  <a (click)="delete()" mat-list-item>
+    <mat-icon matListIcon color="warn">delete</mat-icon>
+    <span mat-line>Eliminar</span>
+  </a>
+</mat-nav-list>

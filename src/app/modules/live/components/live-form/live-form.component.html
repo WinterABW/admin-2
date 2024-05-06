@@ -1,0 +1,123 @@
+<app-page [showAddBtn]="false" [showRefreshBtn]="false"
+  [title]="type === 'ADD' ? 'Adicionar directa' : 'Editar directa'">
+  <ng-container content>
+    <form [formGroup]="liveForm" class="grid grid-cols-none md:grid-cols-2 gap-4">
+      <mat-form-field appearance="outline" floatLabel="auto">
+        <mat-label>Nombre</mat-label>
+        <input formControlName="nombre" matInput type="text">
+        <mat-error *ngIf="liveForm.get('nombre').hasError('required')">Nombre requerido</mat-error>
+      </mat-form-field>
+
+      <ng-select [items]="canales$ | async" [searchable]="true" [virtualScroll]="true" appearance="outline"
+        appendTo="body" bindLabel="nombre" bindValue="id" formControlName="canal" placeholder="Canal"></ng-select>
+
+      <mat-form-field appearance="outline" floatLabel="auto">
+        <mat-label>Descripción</mat-label>
+        <textarea formControlName="descripcion" matInput rows="5"></textarea>
+        <mat-error *ngIf="liveForm.get('descripcion').hasError('required')">Descripción requerida</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="" floatLabel="always">
+        <mat-label>Imagen de Portada</mat-label>
+        <div hidden>
+          <input #imagen (change)="selectImg(imagen)" accept="image/*" id="imagenPortada" type="file">
+          <input #dummy formControlName="url_imagen" hidden matInput required type="tetx">
+        </div>
+        <div class="file-info">
+          <div class="img-container">
+            <img *ngIf="selectedImagen" [src]="selectedImagen" alt="" height="180" width="320">
+          </div>
+        </div>
+        <button (click)="selectImagenDialog($event, imagen)" class="admin-button mt-3" color="primary"
+          mat-raised-button>Cargar</button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" floatLabel="auto">
+        <mat-label>Clave emisión</mat-label>
+        <input formControlName="clave_emision" matInput readonly type="text">
+        <div class="flex items-center" matSuffix>
+          <button (click)="refreshCode($event)" *ngIf="type==='ADD'" mat-icon-button matTooltip="Cambiar código">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button (click)="copy($event, 'code')" mat-icon-button matSuffix matTooltip="Copiar código">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" floatLabel="auto">
+        <mat-label>URL de la emisión</mat-label>
+        <mat-select formControlName="url_emision" readonly>
+          <mat-option value="rtmp://live.picta.cu:1935/stream">Video - rtmp://live.picta.cu:1935/stream</mat-option>
+          <mat-option value="rtmp://live.picta.cu:1935/streama">Audio - rtmp://live.picta.cu:1935/streama</mat-option>
+        </mat-select>
+        <div class="flex items-center" matSuffix>
+          <button (click)="copy($event, 'url')" mat-icon-button matTooltip="Copiar código">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mt-3">
+        <mat-label>Palabras Claves</mat-label>
+        <mat-chip-grid #chipList required>
+          <mat-chip-option (removed)="remove(palabra)" *ngFor="let palabra of this.selectedPalabras" [removable]="true"
+            [selectable]="true">
+            {{palabra}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip-option>
+          <input #palabrasInput (matChipInputTokenEnd)="add($event)" [formControl]="palabrasCtrl"
+            [matAutocomplete]="auto" [matChipInputAddOnBlur]="false" [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+        </mat-chip-grid>
+        <mat-error *ngIf="chipList.errorState">Debe seleccionar al menos una palabra clave.</mat-error>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let palabra of palabrasFiltradas |async" [value]="palabra">
+            {{palabra.palabra}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" floatLabel="auto">
+        <mat-label>Precio</mat-label>
+        <mat-select formControlName="precios">
+          <mat-option *ngFor="let precio of precios$|async" [value]="precio.id">{{precio.precio}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mt-3" floatLabel="always">
+        <mat-label>Chat</mat-label>
+        <mat-slide-toggle color="primary" formControlName="mostrar_chat">
+        </mat-slide-toggle>
+        <textarea hidden matInput></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mt-3" floatLabel="always">
+        <mat-label>Comentarios</mat-label>
+        <mat-slide-toggle color="primary" formControlName="mostrar_comentarios">
+        </mat-slide-toggle>
+        <textarea hidden matInput></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mt-3" floatLabel="always">
+        <mat-label>Publicado</mat-label>
+        <mat-slide-toggle color="primary" formControlName="publicado">
+        </mat-slide-toggle>
+        <textarea hidden matInput></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mt-3" floatLabel="always">
+        <mat-label>Internacional</mat-label>
+        <mat-slide-toggle color="primary" formControlName="internacional">
+        </mat-slide-toggle>
+        <textarea hidden matInput></textarea>
+      </mat-form-field>
+
+      <div class="responsive-section">
+        <button class="" color="warn" mat-flat-button routerLink="/live">Cancelar</button>
+        <button (click)="save()" color="primary" mat-flat-button>Guardar</button>
+      </div>
+    </form>
+
+  </ng-container>
+</app-page>

@@ -1,0 +1,290 @@
+<app-page (refreshClicked)="getListByParams()" addUrl="/publicaciones/add" title="Publicaciones">
+  <ng-container filters>
+    <form [formGroup]="filters" class="flex flex-col items-center md:flex-row flex-wrap md:space-x-4">
+      <mat-form-field>
+        <mat-label>Visibilidad</mat-label>
+        <mat-select formControlName="filtro">
+          <mat-option value="">Ver todos</mat-option>
+          <mat-option value="publicado">Videos publicados</mat-option>
+          <mat-option value="lista">Videos listos para publicar</mat-option>
+          <mat-option value="convertida">Videos en proceso</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="" floatLabel="auto">
+        <mat-label>Tipo de publicación</mat-label>
+        <mat-select formControlName="tipo__in" placeholder="Tipo">
+          <mat-option value="">Ver todos</mat-option>
+          <mat-option value="publicacion">Publicación</mat-option>
+          <mat-option value="publicacion_en_vivo">Publicación en vivo</mat-option>
+          <mat-option value="live">Directa</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="m-4">
+        <mat-label>Canal</mat-label>
+        <mat-select formControlName="canal_nombre_raw">
+          <mat-option *ngFor="let canal of canales$ | async" [value]="canal.nombre">{{ canal.nombre }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="">
+        <mat-label>Tipología</mat-label>
+        <mat-select formControlName="tipologia_nombre_raw" placeholder="Canal">
+          <mat-option value="">Todos</mat-option>
+          <mat-option *ngFor="let tipologia of tipologias|async"
+            [value]="tipologia.nombre">{{tipologia.nombre}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Filtrar publicación</mat-label>
+        <input formControlName="nombre__wildcard" matInput type="text">
+      </mat-form-field>
+    </form>
+  </ng-container>
+
+  <ng-container content>
+    <div class="w-full overflow-auto border hidden md:block customFont">
+      <div class="example-container mat-elevation-z8">
+        <div class="example-loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
+          <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+        </div>
+        <div class="example-table-container">
+          <table mat-table [dataSource]="publicaciones" class="mat-elevation-z8">
+
+            <!-- Position url_imagen -->
+            <ng-container matColumnDef="url_imagen">
+              <th mat-header-cell *matHeaderCellDef>Video</th>
+              <td mat-cell *matCellDef="let element" class="body-cell video-column">
+                <div class="flex">
+                  <div class="">
+                    <div class="thumbnail-container w-32">
+                      <img src="{{element.url_imagen}}_100x70" />
+                    </div>
+                    <div class="video-duracion">
+                      {{ element.duracion }}
+                    </div>
+                  </div>
+                  <div class="video-info">
+                    <h3 class="video-nombre mb-0">
+                      <a href="https://www.picta.cu/medias/{{element.slug_url}}" matTooltip="{{element.nombre}}"
+                        target="_blank">{{ element.nombre }}</a>
+                    </h3>
+                    <div class="video-descripcion" matTooltip="{{element.descripcion}}"
+                      matTooltipClass="description-tooltip">
+                      {{ element.descripcion }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Position fecha_creacion -->
+            <ng-container matColumnDef="fecha_creacion">
+              <th mat-header-cell *matHeaderCellDef>Fecha</th>
+              <td mat-cell *matCellDef="let element" class="body-cell">
+                <div class="flex flex-col">
+                  <strong>
+                    {{ element.fecha_creacion| date: 'd/L/yyyy'}}
+                  </strong>
+                  <span>
+                    {{ element.fecha_creacion| date: 'h:mm a'}}
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Position estado -->
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let element" class="body-cell">
+                <div class="flex flex-col items-center justify-center">
+                  <p *ngIf="!element.convertido">Procesando Video</p>
+                  <mat-form-field class="estado">
+                    <mat-label><mat-icon
+                        [matTooltip]="element.publicado? 'Todos los usuarios pueden ver este video' : 'Solo tu puedes ver este video'"
+                        [ngStyle]="{ color: element.publicado ? '#4CAF50' : '#f44336' }" class="">
+                        {{ element.publicado ? "visibility" : "visibility_off" }}
+                      </mat-icon>
+                      {{ element.publicado ? "Público" : "Privado" }}</mat-label>
+                    <mat-select>
+                      <mat-option (click)="publicar(element)" [value]="true">
+                        <mat-icon [ngStyle]="{ color: !element.publicado ? '#4CAF50' : '#f44336' }">
+                          {{ !element.publicado ? "visibility" : "visibility_off" }}
+                        </mat-icon>
+                        {{ !element.publicado ? "Público" : "Privado" }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Position cantidad_reproducciones -->
+            <ng-container matColumnDef="cantidad_reproducciones">
+              <th mat-header-cell *matHeaderCellDef>
+                <div>Vistas/</div>
+                <div>Reprod</div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="body-cell">
+                <button (click)="element.cantidad_reproducciones > 0 ? seeViews(element) : null" color="primary"
+                  mat-button>
+                  {{element.cantidad_visitas|shortNumber}}/{{element.cantidad_reproducciones|shortNumber}}
+                </button>
+              </td>
+            </ng-container>
+
+            <!-- Position cantidad_descargas -->
+            <ng-container matColumnDef="cantidad_descargas">
+              <th mat-header-cell *matHeaderCellDef>
+                <div>Descarga/</div>
+                <div>Comentarios</div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="body-cell">
+                <button (click)="element.cantidad_descargas > 0 ? seeDownloads(element) : null" color="primary"
+                  mat-button>
+                  {{element.cantidad_descargas|shortNumber}}/{{element.cantidad_comentarios|shortNumber}}
+                </button>
+              </td>
+            </ng-container>
+
+            <!-- Position likes -->
+            <ng-container matColumnDef="likes">
+              <th mat-header-cell *matHeaderCellDef>
+                <div>Likes/</div>
+                <div>Dislikes</div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="body-cell">
+                <button (click)="seeLikes(element)" color="primary" mat-button>
+                  {{element.cantidad_me_gusta|shortNumber}}/{{element.cantidad_no_me_gusta|shortNumber}}
+                </button>
+              </td>
+            </ng-container>
+
+            <!-- Position usuario -->
+            <ng-container matColumnDef="usuario">
+              <th mat-header-cell *matHeaderCellDef>Usuario</th>
+              <td mat-cell *matCellDef="let element" class="body-cell text-left cursor-pointer"
+                matTooltip="{{element.usuario.username}}">
+                <p>{{element.usuario.username.split('@')[0] || element.usuario.username}}</p>
+              </td>
+            </ng-container>
+            <!-- Position descargable -->
+            <ng-container matColumnDef="descargable">
+              <th mat-header-cell *matHeaderCellDef>Descarga</th>
+              <td mat-cell *matCellDef="let element" class="body-cell">
+                <mat-slide-toggle (toggleChange)="toggleDescargable(element)" [checked]="element.descargable"
+                  [disabled]="element.tipo!=='publicacion' && element.tipo!=='live'" color="primary"></mat-slide-toggle>
+              </td>
+            </ng-container>
+
+            <!-- Position canal -->
+            <ng-container matColumnDef="canal" class="text-left">
+              <th mat-header-cell *matHeaderCellDef>Canal</th>
+              <td mat-cell *matCellDef="let element" class="body-cell">
+                <div>{{element.canal?.nombre}}</div>
+              </td>
+            </ng-container>
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="operaciones">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+
+                <button [matMenuTriggerFor]="menuAdmin" mat-icon-button>
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menuAdmin="matMenu">
+                  <div *ngIf="isAdmin">
+                    <button (click)="change(element.id, element.categoria.tipologia.id)" *ngIf="!element.convertido"
+                      mat-menu-item>
+                      <mat-icon>done</mat-icon>
+                      <span>Convertido: True</span>
+                    </button>
+                    <button (click)="generateDownload(element.url_manifiesto)" mat-menu-item>
+                      <mat-icon>cloud_download</mat-icon>
+                      <span>Generar descarga</span>
+                    </button>
+                    <button (click)="deleteDownload(element.url_manifiesto)" mat-menu-item>
+                      <mat-icon>cloud_off</mat-icon>
+                      <span>Eliminar descarga</span>
+                    </button>
+                    <button (click)="convert(element)" mat-menu-item>
+                      <mat-icon>play_arrow</mat-icon>
+                      <span>Convertir</span>
+                    </button>
+                  </div>
+                  <button
+                    [routerLink]="element.tipo==='live' ? ['/live/edit/', element.id]: ['./edit', element.slug_url]"
+                    mat-menu-item>
+                    <mat-icon>edit</mat-icon>
+                    <span>Editar</span>
+                  </button>
+                  <button (click)="eliminarPublicacion(element.id)" color="warn" mat-menu-item>
+                    <mat-icon>delete</mat-icon>
+                    <span>Eliminar</span>
+                  </button>
+                  <button *ngIf="element.categoria.tipologia&&element?.categoria?.tipologia.modelo==='capitulo'"
+                    [routerLink]="['./add']" [state]="{copy: {
+                  nombre: element.nombre,
+                  descripcion: element.descripcion,
+                  palabras_claves: element.palabraClave_data,
+                  tipologia: element.categoria.tipologia.id,
+                  canal:element.canal.id,
+                  serie: element.categoria.capitulo.temporada.serie.pelser_id,
+                  numero: element.categoria.capitulo.numero+1,
+                  temporada: element.categoria.capitulo.temporada.id,
+                  lista_reproduccion_canal: element?.lista_reproduccion_canal ? element.lista_reproduccion_canal[0] : null
+                    }}" mat-menu-item>
+                    <mat-icon>sync_alt</mat-icon>
+                    <span>Nuevo capítulo</span>
+                  </button>
+                  <!-- <button (click)="stopConvertion(element)" mat-menu-item>
+                      <mat-icon>stop</mat-icon>
+                      <span>Detener conversión</span>
+                    </button>-->
+                  <button *ngIf="element.tipo==='live' && !element.convertido" (click)="stopLive(element)"
+                    mat-menu-item>
+                    <mat-icon>stop</mat-icon>
+                    <span>Detener Directa</span>
+                  </button>
+                  <!--
+                                    <button (click)="getFromYoutubeDialog(element)" mat-menu-item>
+                                      <mat-icon>download</mat-icon>
+                                      <span>Fachar de Youtube</span>
+                                    </button>
+                    -->
+                </mat-menu>
+
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+        <mat-paginator #matPaginator [pageSizeOptions]="[10, 30, 50, 75]" [pageSize]="10"
+          showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+    <div class="block md:hidden">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <mat-action-list>
+        <mat-list-item (click)="openBottomSheet(publicacion)" *ngFor="let publicacion of publicaciones"
+          [class.hidden-video]="!publicacion.publicado" class="mat-card">
+          <img [src]="publicacion.url_imagen+'_60x60'" alt="..." matListAvatar class="rounded-img">
+
+          <h3 matLine> {{publicacion.nombre}} </h3>
+          <p matLine>
+            {{publicacion.descripcion}}
+          </p>
+        </mat-list-item>
+      </mat-action-list>
+
+      <mat-paginator (page)="paginate($event)" [length]="totalCount" [pageSizeOptions]="[10, 30, 50, 75]"
+        [pageSize]="10" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+
+  </ng-container>
+</app-page>

@@ -1,0 +1,76 @@
+<div class="flex justify-between">
+  <h2 mat-dialog-title class="text-center mx-auto">Detalles</h2>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="mx-1 mat-card">
+  <img [src]="data.publicacion.url_imagen+'_320x180'" alt="Poster" width="100%">
+  <mat-list>
+    <mat-list-item style="height: auto">
+      <p matLine>
+        <span class="font-weight-bold">Nombre:</span>
+        <span class="text-wrap">
+          {{data.publicacion.nombre}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item style="height: auto">
+      <p matLine >
+        <span class="font-weight-bold">Descripción:</span>
+        <span class="text-wrap">
+          {{data.publicacion.descripcion}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Canal:</span>
+        <span>
+          {{data.publicacion.canal.nombre}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Fecha:</span>
+        <span>
+            {{ data.publicacion.fecha_creacion| date: 'd/L/yyyy h:mm a'}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Usuario:</span>
+        <span>
+          {{data.publicacion.usuario.username}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Vistas:</span>
+        <span>
+          {{data.publicacion.cantidad_reproducciones}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Descargas:</span>
+        <span>
+          {{data.publicacion.cantidad_descargas}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Me gusta/No me gusta:</span>
+        <span>
+          {{data.publicacion.cantidad_me_gusta}}/{{data.publicacion.cantidad_no_me_gusta}}
+        </span>
+      </p>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>
+

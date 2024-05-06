@@ -1,0 +1,55 @@
+<app-page (refreshClicked)="loadData()" addUrl="/events/add" title="Eventos">
+  <ng-container content>
+    <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+    <table [dataSource]="eventos$" class="w-full" mat-table>
+      <ng-container matColumnDef="id">
+        <th *matHeaderCellDef mat-header-cell> Id</th>
+        <td *matCellDef="let element" class="text-black text-sm"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th *matHeaderCellDef mat-header-cell> Nombre</th>
+        <td *matCellDef="let element" class="text-black text-sm"> {{element.nombre}} </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="users">
+        <th *matHeaderCellDef mat-header-cell> Usuarios</th>
+        <td *matCellDef="let element" class="text-black text-sm">
+          <mat-chip-grid *ngIf="element.usuarios.length; else noUsers">
+            <button (click)="openUsersDialog(element)" mat-button>
+              {{element.usuarios.length}} usuario(s)
+            </button>
+          </mat-chip-grid>
+          <ng-template #noUsers>
+            <span class="font-weight-bold text-secondary">Sin usuarios asociados</span>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="operations">
+        <th *matHeaderCellDef mat-header-cell> Operaciones</th>
+        <td *matCellDef="let element" class="text-black text-sm">
+          <div class="buttons">
+
+            <button [routerLink]="['/events/edit', element.id]" mat-icon-button matTooltip="Editar evento">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button (click)="delete(element.id)" color="warn" mat-icon-button
+                    matTooltip="Eliminar evento">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns;sticky: true" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+      <tr *matNoDataRow class="mat-row">
+        <td class="text-center text-black text-sm" colspan="3">Sin datos</td>
+      </tr>
+    </table>
+    <mat-paginator #matPaginator (page)="paginate($event)" [pageSizeOptions]="[10, 30, 50, 75]" [pageSize]="10"
+                   showFirstLastButtons>
+    </mat-paginator>
+  </ng-container>
+</app-page>

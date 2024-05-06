@@ -1,16 +1,17 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { LoaderService } from './loader.service';
+
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { LoaderService } from './loader.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenInterceptorService implements HttpInterceptor {
 
-  constructor(private injector: Injector, private loaderService: LoaderService) {
+  constructor(private injector: Injector) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {

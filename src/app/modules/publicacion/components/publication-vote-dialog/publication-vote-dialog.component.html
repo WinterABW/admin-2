@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Votos</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-tab-group [dynamicHeight]="true">
+    <mat-tab label="Me gusta">
+      <mat-list *ngIf="data.likes.length;else noVote">
+        <mat-list-item *ngFor="let vote of data.likes">
+          <h2 class="font-weight-bold" matLine> {{vote.usuario.username}} </h2>
+          <h3 class="text-muted" matLine> {{vote.fecha | date: 'd/L/yyyy h:mm a'}} </h3>
+        </mat-list-item>
+      </mat-list>
+      <ng-template #noVote>
+        <h3 class="text-center">
+          Sin voto.
+        </h3>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="No me gusta">
+      <mat-list *ngIf="data.dislikes.length;else noVote">
+        <mat-list-item *ngFor="let vote of data.dislikes">
+          <h2 class="font-weight-bold" matLine> {{vote.usuario.username}} </h2>
+          <h3 class="text-muted" matLine> {{vote.fecha | date: 'd/L/yyyy h:mm a'}} </h3>
+        </mat-list-item>
+      </mat-list>
+      <ng-template #noVote>
+        <h3 class="text-center">
+          Sin voto.
+        </h3>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="flex justify-between mat-typography items-center w-full">
+    <button color="warn" mat-button mat-dialog-close>Cerrar</button>
+    <span class="font-weight-bold">Total: {{data.total}}</span>
+
+  </div>
+
+</mat-dialog-actions>

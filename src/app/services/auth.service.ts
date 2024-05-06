@@ -62,6 +62,9 @@ export class AuthService {
   get isContador() {
     return this.credentialsService.credentials.user.groups.some(g => g.name === 'Contadores');
   }
+  get isGestorSolicitud() {
+    return this.credentialsService.credentials.user.groups.some(g => g.name === 'Contadores');
+  }
 
   login(loginData) {
     const body = new FormData();

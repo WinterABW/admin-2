@@ -1,0 +1,87 @@
+<app-page (refreshClicked)="load()" addUrl="/series/add" title="Series">
+  <ng-container filters>
+    <div class="responsive-section">
+      <mat-form-field floatLabel="auto">
+        <mat-label>Filtrar</mat-label>
+        <input [formControl]="filterControl" matInput type="text">
+      </mat-form-field>
+
+    </div>
+  </ng-container>
+  
+  <ng-container content>
+    <div class="hidden lg:block mt-3">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <table [dataSource]="series" mat-table style="width: 100%;">
+
+        <ng-container matColumnDef="nombre">
+          <th *matHeaderCellDef mat-header-cell>Nombre</th>
+          <td *matCellDef="let element" class="text-black text-sm">{{ element.nombre }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="cantidad_temporadas">
+          <th *matHeaderCellDef mat-header-cell>Temporadas</th>
+          <td *matCellDef="let element" class="text-black text-sm">
+            {{ element.cantidad_temporadas }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cantidad_capitulos">
+          <th *matHeaderCellDef mat-header-cell>Capítulos</th>
+          <td *matCellDef="let element" class="text-black text-sm">
+            {{ element.cantidad_capitulos }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ano">
+          <th *matHeaderCellDef mat-header-cell>Año</th>
+          <td *matCellDef="let element" class="text-black text-sm">{{ element.ano }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="pais">
+          <th *matHeaderCellDef mat-header-cell>País</th>
+          <td *matCellDef="let element" class="text-black text-sm">{{ element.pais }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="operations">
+          <th *matHeaderCellDef mat-header-cell>Acciones</th>
+          <td *matCellDef="let element" class="text-black text-sm">
+            <div class="buttons">
+              <button (click)="edit(element.pelser_id)" mat-icon-button matTooltip="Editar serie">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button (click)="eliminarSerie(element.pelser_id)" color="warn" mat-icon-button
+                      matTooltip="Eliminar serie">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      </table>
+
+      <mat-paginator (page)="paginate($event)" [length]="total" [pageSizeOptions]="[10, 20]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+    <div class="block lg:hidden mat-card">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <mat-action-list>
+        <mat-list-item (click)="openBottomSheet(serie)" *ngFor="let serie of series" class="mat-card"
+                       style="height: auto">
+          <img [src]="serie.imagen_secundaria+'_100x100'" alt="" matListAvatar>
+
+          <h3 class="font-weight-bold text-wrap" matLine>{{serie.nombre}}</h3>
+          <h3 class="text-muted text-wrap" matLine>{{serie.ano}} | {{serie.pais}}
+            | {{serie.cantidad_temporadas}} {{serie.cantidad_temporadas > 1 ? ' temporadas' : ' temporada'}}</h3>
+        </mat-list-item>
+      </mat-action-list>
+      <mat-paginator (page)="paginate($event)" [length]="total" [pageSizeOptions]="[10, 20]" class="mt-3"
+                     showFirstLastButtons></mat-paginator>
+    </div>
+  </ng-container>
+</app-page>
+

@@ -1,0 +1,98 @@
+<h3>Adicionar disco</h3>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Nombre</mat-label>
+          <input formControlName="nombre" matInput type="text">
+        </mat-form-field>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
+            [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
+            bindLabel="nombre" class="w-full" formControlName="interprete" placeholder="Intérprete">
+            <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <ng-select (close)="loadExtras()" (search)="searchExtraProductora($event)" [addTag]="addNewExtraProductora"
+            [class.invalid-select]="(form.get('casa_disquera').touched) &&form.get('casa_disquera').hasError('required')"
+            [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
+            bindLabel="nombre" class="expand-2" formControlName="casa_disquera" placeholder="Casa Disquera">
+            <ng-option *ngFor="let extra of filteredExtraProductora" [value]="extra">{{extra.nombre}}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Género</mat-label>
+            <mat-select formControlName="genero" multiple name="genero">
+              <mat-option *ngFor="let genero of genres$|async" [value]="genero.id">{{genero.nombre}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('genero').hasError('required')">El género es requerido.</mat-error>
+
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="mb-0 w-full">
+            <mat-label>Sello</mat-label>
+            <input formControlName="sello" matInput type="text">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="mb-0 w-full">
+            <mat-label>Fecha de Lanzamiento</mat-label>
+            <input [matDatepicker]="picker" formControlName="release_date" matInput>
+            <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="mb-0 w-full">
+            <mat-label>Fecha de Venta</mat-label>
+            <input [matDatepicker]="picker2" formControlName="sale_start_date" matInput>
+            <mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <img *ngIf="selectedImagen" [src]="selectedImagen" alt="" class="img-fluid">
+          <div hidden>
+            <label for="imagen_secundaria">Imagen secundaria: </label>
+            <input #imagen (change)="selectImg(imagen)" accept="image/*" id="imagen_secundaria" type="file">
+            <mat-error *ngIf="form.get('imagen').hasError('required')">La imagen secundaria es requerida.
+            </mat-error>
+
+          </div>
+          <button (click)="clickImg($event, imagen)" mat-raised-button>Cargar imagen
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+
+  </form>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="cta">
+    <button (click)="dialogRef.close()" color="warn" mat-raised-button>Cancelar</button>
+    <button (click)="save()" [disabled]="form.invalid" color="primary" mat-raised-button>Guardar</button>
+
+  </div>
+
+</mat-dialog-actions>

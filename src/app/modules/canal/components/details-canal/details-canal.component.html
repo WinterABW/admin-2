@@ -1,0 +1,59 @@
+<div class="flex justify-between">
+  <h2 mat-dialog-title class="text-center mx-auto">Detalles</h2>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="mx-1 mat-card">
+  <img [src]="data.canal.url_imagen+'_320x180'" alt="Poster" width="100%">
+  <mat-list>
+    <mat-list-item style="height: auto">
+      <p matLine>
+        <span class="font-weight-bold">Nombre:</span>
+        <span class="text-wrap">
+          {{data.canal.nombre}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item style="height: auto">
+      <p matLine >
+        <span class="font-weight-bold">Descripción:</span>
+        <span class="text-wrap">
+          {{data.canal.descripcion}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item style="height: auto">
+      <p matLine >
+        <span class="font-weight-bold">Alias:</span>
+        <span class="text-wrap">
+          {{data.canal.alias}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Fecha:</span>
+        <span>
+            {{ data.canal.fecha_creacion| date: 'd/L/yyyy h:mm a'}}
+        </span>
+      </p>
+    </mat-list-item>
+    <mat-list-item style="height: auto">
+      <p matLine>
+        <span class="font-weight-bold">Usuarios:</span>
+        <span class="text-wrap" *ngFor="let usuario of data.canal.usuarios_asociados;let index = index">
+          {{index>0? ', ': ''}}{{usuario.username}}</span>
+      </p>
+    </mat-list-item>
+    <mat-list-item>
+      <p matLine>
+        <span class="font-weight-bold">Suscripciones:</span>
+        <span>
+          {{data.canal.cantidad_suscripciones}}
+        </span>
+      </p>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>
+

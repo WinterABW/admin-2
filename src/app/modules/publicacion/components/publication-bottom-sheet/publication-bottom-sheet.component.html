@@ -1,0 +1,42 @@
+<mat-nav-list>
+  <a
+    href="https://www.picta.cu/medias/{{data.publicacion.slug_url}}" mat-list-item target="_blank">
+    <mat-icon matListIcon>visibility</mat-icon>
+    <span mat-line>Ver en Picta</span>
+  </a>
+  <a (click)="seeDetails()" mat-list-item>
+    <mat-icon matListIcon>list</mat-icon>
+    <span mat-line>Detalles</span>
+  </a>
+  <a (click)="bsRef.dismiss()"
+     [routerLink]="data.publicacion.tipo==='live' ? ['/live/edit/', data.publicacion.id]: ['/publicaciones/edit', data.publicacion.slug_url]"
+     mat-list-item>
+    <mat-icon matListIcon>edit</mat-icon>
+    <span mat-line>Editar</span>
+  </a>
+  <a (click)="toggleVisibility()" mat-list-item>
+    <mat-icon matListIcon>{{ data.publicacion.publicado ? "visibility_off" : "visibility" }}</mat-icon>
+    <span mat-line>{{data.publicacion.publicado ? 'Ocultar' : 'Publicar'}}</span>
+  </a>
+  <a (click)="toggleDownload()" mat-list-item>
+    <mat-icon matListIcon>{{ data.publicacion.descargable ? "block" : "get_app" }}</mat-icon>
+    <span mat-line>{{data.publicacion.descargable ? 'Bloquear descarga' : 'Permitir descarga'}}</span>
+  </a>
+  <a (click)="generateDownload()" mat-list-item>
+    <mat-icon matListIcon>cloud_download</mat-icon>
+    <span mat-line>Generar descarga</span>
+  </a>
+  <a (click)="convert()" mat-list-item>
+    <mat-icon matListIcon>play_arrow</mat-icon>
+    <span mat-line>Convertir</span>
+  </a>
+  <a (click)="stopLive()" mat-list-item *ngIf="data.publicacion.tipo==='live' && !data.publicacion.convertido">
+    <mat-icon matListIcon>stop</mat-icon>
+    <span mat-line>Detener Directa</span>
+  </a>
+  <a (click)="delete()" mat-list-item>
+    <mat-icon matListIcon color="warn">delete</mat-icon>
+    <span mat-line>Eliminar</span>
+  </a>
+</mat-nav-list>
+

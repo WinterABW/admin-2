@@ -1,0 +1,168 @@
+<app-page (refreshClicked)="getList()" addUrl="/canal/add" title="Canales">
+  <ng-container filters>
+    <form [formGroup]="filters" class="flex flex-col md:flex-row items-center md:space-x-4">
+      <mat-form-field>
+        <mat-label>Visibilidad</mat-label>
+        <mat-select class="w-full" formControlName="publicado">
+          <mat-option value="all">Ver todos</mat-option>
+          <mat-option value="true">Canales publicados</mat-option>
+          <mat-option value="false">Canales privados</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input formControlName="nombre__contains" matInput type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Planes</mat-label>
+        <mat-select formControlName="plan_id">
+          <mat-option *ngFor="let plan of planes$|async" [value]="plan.id">{{plan.nombre}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </ng-container>
+
+  <ng-container content>
+    <div class="hidden lg:block">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+      <mat-table (matSortChange)="sortBy($event)" [dataSource]="canales" mat-table matSort>
+        <!-- Video Column -->
+        <ng-container cdkColumnDef="url_avatar">
+          <mat-header-cell *cdkHeaderCellDef>Avatar</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            <img src="{{element.url_avatar}}_100x100" matTooltip="{{element.descripcion}}"
+            matTooltipPosition="above" matTooltipClass="my-tooltip"/>
+          </mat-cell>
+        </ng-container>
+        
+
+        <ng-container cdkColumnDef="fecha_creacion">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header="fecha_creacion">Fecha creación</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            <div class="flex flex-col text-center text-sm">
+              <span class="font-bold">
+              {{element.fecha_creacion | date: 'dd/MM/yy'}}
+              </span>
+              <span>
+              {{element.fecha_creacion | date: 'H:m a'}}
+              </span>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <!-- <ng-container cdkColumnDef="alias">
+          <mat-header-cell *cdkHeaderCellDef>Alias</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>{{ element.alias }}</mat-cell>
+        </ng-container> -->
+        <!-- Usuario Column -->
+        <ng-container cdkColumnDef="usuarios_asociados">
+          <mat-header-cell *cdkHeaderCellDef>Usuario(s)</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+          <span>
+          <ng-container *ngFor="let item of element.usuarios_asociados; let i = index; let last = last">
+            {{item.username}}<span *ngIf="!last">{{', '}}</span>
+          </ng-container>
+
+          </span>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container cdkColumnDef="nombre">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header="nombre">Nombre</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            <a href="https://www.picta.cu/canal/{{element.alias}}" target="_blank"
+            matTooltip="{{element.alias}}" matTooltipPosition="above" matTooltipClass="my-tooltip">
+             {{ element.nombre }}
+            </a>
+          </mat-cell>
+        </ng-container>
+
+
+        <!-- Weight Column -->
+        <ng-container cdkColumnDef="cantidad_suscripciones">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header="cantidad_suscripciones">Seguidores</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            <button (click)="openSubscriptionsDialog(element)" color="primary" mat-button>
+              {{ element.cantidad_suscripciones }}
+
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container cdkColumnDef="publicado">
+          <mat-header-cell *cdkHeaderCellDef>Visibilidad</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell class="px-4">
+            <div class="visibilidad flex items-center">
+              <mat-icon [matTooltip]="
+              element.publicado
+              ? 'Todos los usuarios pueden ver este canal'
+              : 'Solo tu puedes ver este canal'"
+              [ngStyle]="{ color: element.publicado ? '#4CAF50' : '#f44336' }">
+              {{ element.publicado ? "visibility" : "visibility_off" }}
+              </mat-icon>
+              <button [matMenuTriggerFor]="menu" mat-button>
+                {{ element.publicado ? "Público" : "Privado" }}
+                <mat-icon>arrow_drop_down</mat-icon>
+              </button>
+
+              <mat-menu #menu="matMenu">
+                <button (click)="publicar({ id: element.id, publicado: !element.publicado })" mat-menu-item>
+                  {{ element.publicado ? "Privado" : "Público" }}
+
+                </button>
+              </mat-menu>
+            </div>
+          </mat-cell>
+        </ng-container>
+        <ng-container cdkColumnDef="donate">
+          <mat-header-cell *cdkHeaderCellDef class="px-4">Donar</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell class="px-4">
+            <mat-slide-toggle (change)="toggleDonate(element, $event)" *ngIf="element.donar !== null"
+                              [checked]="element.donar"
+                              color="primary"></mat-slide-toggle>
+            <span *ngIf="element.donar === null" matTooltip="Contacte a un administrador para más información">Premiación deshabilitada</span>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="operaciones">
+          <mat-header-cell *cdkHeaderCellDef>Operaciones</mat-header-cell>
+          <mat-cell *cdkCellDef="let element" mat-cell>
+            <button (click)="edit(element.slug_url)" mat-icon-button matTooltip="Editar canal">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button (click)="eliminarCanal(element.id)" color="warn" mat-icon-button matTooltip="Eliminar Canal">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *cdkRowDef="let row; columns: displayedColumns" class="example-element-row"></mat-row>
+      </mat-table>
+
+      <mat-paginator (page)="paginate($event)" [pageSizeOptions]="[10, 20, 50]"
+                     showFirstLastButtons></mat-paginator>
+    </div>
+    <div class="block lg:hidden">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <mat-action-list>
+        <mat-list-item (click)="openBottomSheet(canal)" *ngFor="let canal of canales"
+                       [class.hidden-video]="!canal.publicado" class="mat-card">
+          <img [src]="canal.url_imagen+'_200x200'" alt="..." matListAvatar>
+          <h3 matLine> {{canal.nombre}} </h3>
+          <p matLine>
+            {{canal.descripcion}}
+
+          </p>
+        </mat-list-item>
+      </mat-action-list>
+      <mat-paginator (page)="paginate($event)" [length]="totalCount" [pageSizeOptions]="[10, 30, 50, 75]"
+                     [pageSize]="10"
+                     showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </ng-container>
+</app-page>

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { UtilesService } from './utiles.service';
 
+
 const baseUrl = environment.baseUrl
 
 const url = `${baseUrl}/filtro_query/`;

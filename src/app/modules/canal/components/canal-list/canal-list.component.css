@@ -1,0 +1,61 @@
+.table-container {
+  width: 100%;
+  overflow: scroll;
+}
+
+.add-button {
+  margin: 15px 0;
+}
+
+table {
+  width: 100%;
+}
+
+.example-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+img {
+  height: 68px;
+  padding: 8px;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: rgba(1, 1, 1, 0.1);
+}
+
+td {
+  height: 84px;
+}
+
+td.mat-column-usuarios_asociados {
+  padding-right: 20px;
+}
+
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+  padding: 10px !important;
+}
+
+.visibilidad, .mat-column-operaciones {
+  min-width: 150px;
+}
+
+.cta-start {
+  float: left;
+}
+
+.cta-end {
+  float: right;
+}
+.hidden-video{
+  border-left: 3px solid red;
+}

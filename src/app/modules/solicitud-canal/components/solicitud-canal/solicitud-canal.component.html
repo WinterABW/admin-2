@@ -1,0 +1,123 @@
+<app-page (refreshClicked)="loadData()" addPermission="add_canal_solicitud" addUrl="/solicitud-canal/create"
+  title="Solicitudes de Canal">
+  <ng-container extraBtns>
+    <button (click)="export()" class="page-btn font-bold" mat-button type="button">
+      <mat-icon class="mr-2">get_app</mat-icon>
+      Exportar
+    </button>
+  </ng-container>
+
+  <ng-container filters>
+    <form [formGroup]="filtersForm" class="responsive-section flex flex-row gap-2">
+      <mat-form-field class="mr-md-3" floatLabel="auto">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="estado">
+          <mat-option value="">Todos</mat-option>
+          <mat-option value="pendiente">Pendiente</mat-option>
+          <mat-option value="aceptada">Aceptada</mat-option>
+          <mat-option value="denegada">Denegada</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field floatLabel="auto">
+        <input formControlName="data_canal_nombre__contains" matInput placeholder="Filtrar" type="text">
+      </mat-form-field>
+    </form>
+  </ng-container>
+
+  <ng-container content>
+    <div class="hidden lg:block">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <table #table [dataSource]="solicitudes" id="excel-table" mat-table style="width: 100%;">
+
+        <ng-container matColumnDef="nombre">
+          <th *matHeaderCellDef mat-header-cell>Nombre</th>
+          <td *matCellDef="let element" class="px-3 text-black text-sm">
+            {{ element.data.nombre}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th *matHeaderCellDef mat-header-cell>Descripcion</th>
+          <td *matCellDef="let element" class="px-3 text-black text-sm">
+            <div class="descripcion">
+              {{ element.data.descripcion}}
+
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="user">
+          <th *matHeaderCellDef mat-header-cell>Usuario</th>
+          <td *matCellDef="let element" class="px-3 text-black text-sm">
+            {{ element.user_data?.username || 'N/A' | titlecase}}
+          </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="estado">
+          <th *matHeaderCellDef class="text-center" mat-header-cell>Estado</th>
+          <td *matCellDef="let element" class="px-3 text-black text-sm">
+            <mat-form-field>
+              <mat-select (selectionChange)="changeState($event, element.id)" [value]="element.estado">
+                <mat-option [disabled]="element.estado === 'aceptada'" value="pendiente">Pendiente</mat-option>
+                <mat-option value="aceptada">Aceptada</mat-option>
+                <mat-option [disabled]="element.estado === 'aceptada'" value="denegada">Denegada</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha">
+          <th *matHeaderCellDef class="text-center" mat-header-cell>Fecha</th>
+          <td *matCellDef="let element" class="px-3 text-black text-sm">
+            <div class="flex flex-col">
+              <strong>{{ element.fecha| date: 'd/L/yyyy'}}</strong>
+              <span>{{ element.fecha| date: 'h:mm a'}}</span>
+            </div>
+        </ng-container>
+
+        <ng-container matColumnDef="operations">
+          <th *matHeaderCellDef mat-header-cell>Acciones</th>
+          <td *matCellDef="let element" class="px-3 text-black text-sm">
+            <div class="buttons">
+              <button *ngIf="authService.hasPermission('change_canal_solicitud')"
+                [routerLink]="['/solicitud-canal/edit', element.id]" mat-icon-button matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button (click)="eliminar(element.id)" color="warn"
+                *ngIf="authService.hasPermission('delete_canal_solicitud')" mat-icon-button matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      </table>
+
+      <mat-paginator (page)="paginate($event)" [length]="total" [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+
+    <div class="block lg:hidden">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+      <mat-action-list>
+        <mat-list-item (click)="openBottomSheet(solicitud)" *ngFor="let solicitud of solicitudes"
+          [class.hidden-video]="!solicitud.aceptada" class="mat-card">
+          <mat-icon matListIcon>{{ solicitud.aceptada ? "check" : "cancel" }}</mat-icon>
+
+          <h3 class="font-weight-bold" matLine> {{solicitud.data.nombre}} </h3>
+          <p matLine>
+            {{solicitud.data.user.username}}
+          </p>
+          <h3 class="text-muted" matLine> {{solicitud.fecha | date: 'dd/MM/yyyy'}} </h3>
+        </mat-list-item>
+      </mat-action-list>
+      <mat-paginator (page)="paginate($event)" [length]="total" [pageSizeOptions]="[10, 30, 50, 75]" [pageSize]="10"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </ng-container>
+
+</app-page>

@@ -1,0 +1,5 @@
+<app-page [showAddBtn]="false" [showRefreshBtn]="false" title="Adicionar evento">
+  <ng-container content>
+    <app-event-form (saved)="save($event)"></app-event-form>
+  </ng-container>
+</app-page>

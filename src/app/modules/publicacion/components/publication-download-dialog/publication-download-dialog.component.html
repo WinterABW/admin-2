@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Descargas</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-list>
+    <mat-list-item *ngFor="let download of data.downloads">
+      <h2 class="font-weight-bold" matLine> {{download.usuario.username}} </h2>
+      <h3 class="text-muted" matLine> {{download.fecha | date: 'd/L/yyyy h:mm a'}} </h3>
+
+
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="flex justify-between mat-typography items-center w-full">
+    <button color="warn" mat-button mat-dialog-close>Cerrar</button>
+    <span class="font-weight-bold">Total: {{data.total}} </span>
+
+  </div>
+</mat-dialog-actions>

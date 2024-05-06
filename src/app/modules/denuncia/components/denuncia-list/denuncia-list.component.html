@@ -1,0 +1,84 @@
+<app-page (refreshClicked)="cargarDatos()" [showAddBtn]="false" title="Denuncias">
+  <ng-container content>
+    <div class="">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <table [dataSource]="denuncias" aria-label="Elements" mat-table matSort>
+        <!-- User Column -->
+        <ng-container matColumnDef="usuario">
+          <th *matHeaderCellDef class="" mat-header-cell>Usuario</th>
+          <td *matCellDef="let row" class="px-0 mx-0 text-sm" mat-cell>{{ row.usuario.username }}</td>
+        </ng-container>
+
+        <!-- Tipo Column -->
+        <ng-container matColumnDef="tipo_denuncia">
+          <th *matHeaderCellDef class="" mat-header-cell>Tipo</th>
+          <td *matCellDef="let row" class="px-0" mat-cell>{{ row.tipo_denuncia }}</td>
+        </ng-container>
+
+        <!-- Estado Column -->
+
+        <ng-container matColumnDef="fecha">
+          <th *matHeaderCellDef class="" mat-header-cell>Fecha</th>
+          <td *matCellDef="let row" mat-cell>
+            <div class="flex flex-col items-center">
+              <span class="font-weight-bold"> {{ row.fecha | date: 'd/L/yyyy'}}</span>
+              <span> {{ row.fecha | date: 'h:mm a'}}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Publicacion Column -->
+        <ng-container matColumnDef="publicacion">
+          <th *matHeaderCellDef class="" mat-header-cell>Publicacion</th>
+          <td *matCellDef="let row" mat-cell>
+            <a href="https://www.picta.cu/medias/{{row?.publicacion?.slug_url}}" target="_blank">{{
+              row.publicacion.nombre }}</a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="evidencia">
+          <th *matHeaderCellDef mat-header-cell>Evidencia</th>
+          <td *matCellDef="let row" class="" mat-cell>
+            <a *ngIf="row.evidencia" [href]="row.evidencia" mat-icon-button matTooltip="Descargar"
+              style="text-decoration: none">
+              <mat-icon>file_download</mat-icon>
+            </a>
+            <span *ngIf="!row.evidencia">N/A</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="estado">
+          <th *matHeaderCellDef mat-header-cell>Estado</th>
+          <td *matCellDef="let row" mat-cell>
+            <mat-form-field appearance="fill">
+              <mat-select (selectionChange)="changeState($event, row.id)"
+                [disabled]="(state(row.estado) === 'np' || state(row.estado) === 'pr') ? true : null"
+                [value]="state(row.estado)">
+                <mat-option *ngIf="state(row.estado)==='pe'" value="pe">Pendiente</mat-option>
+                <mat-option value="ep">En Proceso</mat-option>
+                <mat-option value="np">No procede</mat-option>
+                <mat-option *ngIf="state(row.estado)!=='pe'" value="pr">Procesada</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="operaciones">
+          <th *matHeaderCellDef mat-header-cell>Operaciones</th>
+          <td *matCellDef="let row" mat-cell>
+            <button (click)="delete(row.id)" *ngIf="authService.hasPermission('delete_denuncia')" color="warn"
+              mat-icon-button matTooltip="Eliminar denuncia">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+
+  </ng-container>
+</app-page>

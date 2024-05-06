@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { delay, map, pluck } from 'rxjs/operators';
+import { map, pluck } from 'rxjs/operators';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { UtilesService } from './utiles.service';
@@ -12,7 +12,6 @@ const baseUrlv2=environment.baseUrlv2
 
 const URL = `${baseUrl}/publicacion`;
 const URLv2 = `${baseUrlv2}/publicacion`;
-const URL_NOMAD = `http://172.28.106.2:4646/v1/job`;
 
 @Injectable({
   providedIn: 'root'

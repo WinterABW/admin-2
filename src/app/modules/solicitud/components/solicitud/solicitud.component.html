@@ -1,0 +1,122 @@
+<app-page (refreshClicked)="loadData()" addPermission="add_seller_solicitud" addUrl="/solicitud/add"
+  title="Solicitudes de vendedor">
+
+  <ng-container filters>
+    <form [formGroup]="filtersForm" class="responsive-section flex flex-row gap-2">
+      <mat-form-field class="mr-md-3" floatLabel="auto">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="estado">
+          <mat-option value="">Todos</mat-option>
+          <mat-option value="pendiente">Pendiente</mat-option>
+          <mat-option value="aceptada">Aceptada</mat-option>
+          <mat-option value="denegada">Denegada</mat-option>
+          <mat-option value="creada">Creada</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field floatLabel="auto">
+        <input formControlName="person_name__wildcard" matInput placeholder="Filtrar" type="text">
+      </mat-form-field>
+    </form>
+  </ng-container>
+
+  <ng-container content>
+    <div class="hidden lg:block">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <table [dataSource]="solicitudes" mat-table style="width: 100%;">
+        <ng-container matColumnDef="nombre">
+          <th *matHeaderCellDef mat-header-cell>Nombre</th>
+          <td *matCellDef="let element" class="text-black text-sm">
+            {{ element.data.name}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th *matHeaderCellDef mat-header-cell>Correo</th>
+          <td *matCellDef="let element" class="text-black text-sm">
+            {{ element.data.email}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipo">
+          <th *matHeaderCellDef mat-header-cell>Tipo</th>
+          <td *matCellDef="let element" class="text-black text-sm">
+            {{ element.tipo | titlecase}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="aceptada">
+          <th *matHeaderCellDef mat-header-cell>Estado</th>
+          <td *matCellDef="let element" class="text-black text-sm">
+            <mat-form-field appearance="fill" class="custom-select-field">
+              <mat-select (selectionChange)="changeState($event, element.id)" [value]="element.estado" [disabled]="!authService.isGestorSolicitud && !authService.isAdmin">
+                <mat-option [disabled]="element.estado === 'aceptada'" value="pendiente">Pendiente</mat-option>
+                <mat-option value="aceptada">Aceptada</mat-option>
+                <mat-option [disabled]="element.estado === 'aceptada'" value="denegada">Denegada</mat-option>
+                <mat-option [disabled]="element.estado === 'creada'" value="creada">Creada</mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="providers">
+          <th *matHeaderCellDef mat-header-cell>
+            <p>Código</p>
+            <p>Streaming/Descarga</p>
+          </th>          
+          <td *matCellDef="let element" class="text-black text-sm">
+            <span class="font-bold">{{element.data.provider_streaming || '-'}}</span>
+            <span>/</span>
+            <span class="font-bold">{{element.data.provider_download || '-'}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha">
+          <th *matHeaderCellDef mat-header-cell>Fecha</th>
+          <td *matCellDef="let element" class="text-black text-sm">{{ element.fecha | date: 'dd/MM/yyyy'}}</td>
+        </ng-container>
+        <ng-container matColumnDef="operations">
+          <th *matHeaderCellDef mat-header-cell>Acciones</th>
+          <td *matCellDef="let element" class="text-black text-sm">
+            <div class="buttons">
+              <button *ngIf="authService.hasPermission('change_seller_solicitud')"
+                [routerLink]="['/solicitud/edit', element.id]" mat-icon-button matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button (click)="eliminar(element.id)" *ngIf="authService.hasPermission('delete_seller_solicitud')"
+                color="warn" mat-icon-button matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      </table>
+
+      <mat-paginator (page)="paginate($event)" [length]="total" [pageSizeOptions]="[10, 20]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+    <div class="block lg:hidden">
+      <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+
+      <mat-action-list>
+        <mat-list-item (click)="openBottomSheet(solicitud)" *ngFor="let solicitud of solicitudes"
+          [class.hidden-video]="!solicitud.aceptada" class="mat-card">
+          <mat-icon matListIcon>{{ solicitud.aceptada ? "check" : "cancel" }}</mat-icon>
+
+          <h3 class="font-weight-bold" matLine> {{solicitud.data.name}} </h3>
+          <p matLine>
+            {{solicitud.data.ci}}
+          </p>
+          <h3 class="text-muted" matLine> {{solicitud.fecha | date: 'dd/MM/yyyy'}} </h3>
+        </mat-list-item>
+      </mat-action-list>
+      <mat-paginator (page)="paginate($event)" [length]="total" [pageSizeOptions]="[10, 30, 50, 75]" [pageSize]="10"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </ng-container>
+</app-page>
