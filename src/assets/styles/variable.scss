@@ -8,18 +8,19 @@ File: scss
 
 @use "@angular/material" as mat;
 @include mat.core();
-
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700');
 
 $bodyfont: 'Poppins', sans-serif;
 $headingfont: 'Poppins', sans-serif;
+$bodyfont: "Barlow Condensed", sans-serif;
+$headingfont: "Barlow Condensed", sans-serif;
 
 $mat-primary: (
   100: #ebf9fa,
   500: #1e88e5,
   700: #1e88e5,
-  contrast: (
-    100: rgba(black, 0.87),
+  contrast: (100: rgba(black, 0.87),
     500: white,
     700: white,
   ),
@@ -28,8 +29,7 @@ $mat-secondary: (
   100: #fff5f2,
   500: #26c6da,
   700: #26c6da,
-  contrast: (
-    100: white,
+  contrast: (100: white,
     500: white,
     700: white,
   ),
@@ -38,8 +38,7 @@ $mat-warn: (
   100: FDEDE8,
   500: #e91e63,
   700: #e91e63,
-  contrast: (
-    100: white,
+  contrast: (100: white,
     500: white,
     700: white,
   ),
@@ -57,19 +56,13 @@ $warn: mat.define-palette($mat-warn, 500);
 // $background: map-get($theme, background);
 // $foreground: map-get($theme, foreground);
 
-$cyantheme: mat.define-light-theme(
-  (
-    color: (
-      primary: $primary,
-      accent: $accent,
-      warn: $warn,
-    ),
-    typography:
-      mat.define-typography-config(
-        $font-family: "Poppins",
+$cyantheme: mat.define-light-theme((color: (primary: $primary,
+        accent: $accent,
+        warn: $warn,
       ),
-  )
-);
+      typography: mat.define-typography-config($font-family: "Barlow Condensed",
+      ),
+    ));
 
 @include mat.all-component-themes($cyantheme);
 

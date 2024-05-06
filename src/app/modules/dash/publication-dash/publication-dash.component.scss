@@ -24,24 +24,4 @@
   color: white;
 }
 
-.custom{
-  height: 100% !important;
-}
-.imgc{
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 50% !important;
-  border: 1px solid black;
-  margin: auto;
-}
 
-.contenedor {
-  display: grid;
-  grid-template-columns: 20% 80%; /* Define el ancho de las columnas */
-  grid-gap: 10px; /* Espacio entre las columnas */
-  margin: auto;
-}
-
-.mat-mdc-list-item-icon {
-  color: rgba(0, 0, 0, 0.54);
-}
