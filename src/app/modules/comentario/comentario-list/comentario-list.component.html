@@ -1,4 +1,4 @@
-<app-page (refreshClicked)="load()" [showAddBtn]="false" [showRefreshBtn]="true" title="Comentarios">
+<!-- <app-page (refreshClicked)="load()" [showAddBtn]="false" [showRefreshBtn]="true" title="Comentarios">
   <ng-container filters>
     <form [formGroup]="filters" class="responsive-section flex justify-between gap-4 md:flex-col lg:flex-row">    
       <mat-form-field>
@@ -134,4 +134,32 @@
     </ng-template>
 
   </ng-container>
+</app-page> -->
+
+<app-page (refreshClicked)="load()" [showAddBtn]="false" [showRefreshBtn]="true" title="Comentarios">
+  <ng-container filters>
+    <form [formGroup]="filters" class="flex justify-between gap-4 md:flex-col lg:flex-row">
+      <mat-form-field>
+        <input formControlName="search" matInput placeholder="Usuario o Publicación" type="text">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="publicacion_nombre__contains" matInput placeholder="Publicación" type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="usuario_nombre__contains" matInput placeholder="Usuario" type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="eliminado">
+          <mat-option [value]="'all'">Todos</mat-option>
+          <mat-option [value]="true">Eliminado</mat-option>
+          <mat-option [value]="false">No eliminado</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </ng-container>
+  <ng-container content>
+    <app-activity-timeline [comentarios]="comentarios$"></app-activity-timeline>
+  </ng-container>  
 </app-page>

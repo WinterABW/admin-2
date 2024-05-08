@@ -4,14 +4,14 @@
       <div class="form-row">
         <div class="col-12 col-md-6">
           <div class="comunes">
-            <mat-form-field appearance="outline" class="mt-3">
+            <mat-form-field appearance="fill" class="mt-3">
               <mat-label> Tipo</mat-label>
               <mat-select formControlName="tipo" placeholder="Seleccione la tipología" required>
                 <mat-option value="publicacion">Publicación</mat-option>
                 <mat-option value="publicacion_en_vivo">Publicación en Vivo</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field *ngIf="form.controls['tipo'].value !== 'publicacion_en_vivo'" appearance="outline">
+            <mat-form-field *ngIf="form.controls['tipo'].value !== 'publicacion_en_vivo'" appearance="fill">
               <mat-label> Seleccione la tipología</mat-label>
               <mat-select #selectTipologias formControlName="tipologia" required>
                 <mat-option *ngFor="let tipologia of tipologias$|async" [value]="tipologia.id">{{tipologia.nombre}}
@@ -19,7 +19,7 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" floatLabel="auto">
+            <mat-form-field appearance="fill" floatLabel="auto">
               <mat-label>Nombre</mat-label>
               <input formControlName="nombre" matInput maxlength="91" required type="text">
               <mat-error *ngIf="form.get('nombre').hasError('required')">El nombre es requerido.</mat-error>
@@ -29,19 +29,19 @@
               </mat-error>
             </mat-form-field>
 
-            <mat-form-field *ngIf="modeloSeleccionado !== 'videoclip'" appearance="outline" floatLabel="auto">
+            <mat-form-field *ngIf="modeloSeleccionado !== 'videoclip'" appearance="fill" floatLabel="auto">
               <mat-label>Descripción</mat-label>
               <textarea formControlName="descripcion" matInput rows="8" type="text"></textarea>
             </mat-form-field>
 
-            <ng-select [items]="canales$|async" [searchable]="true" [virtualScroll]="true" appearance="outline"
+            <ng-select [items]="canales$|async" [searchable]="true" [virtualScroll]="true" appearance="fill"
               appendTo="body" bindLabel="nombre" (change)="selectCanal($event)" bindValue="id" formControlName="canal"
               placeholder="Canal">
             </ng-select>
             <mat-error *ngIf="form.get('canal').hasError('required') && form.get('canal').dirty">El canal es requerido.
             </mat-error>
 
-            <mat-form-field appearance="outline" floatLabel="auto">
+            <mat-form-field appearance="fill" floatLabel="auto">
               <mat-label>Palabras Claves</mat-label>
               <mat-chip-grid #chipList required>
                 <mat-chip-option (removed)="remove(palabra)" *ngFor="let palabra of this.selectedPalabras" [removable]="true"
@@ -60,34 +60,34 @@
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
-            <mat-form-field appearance="outline" floatLabel="always">
+            <mat-form-field appearance="fill" floatLabel="always">
               <mat-label>Comentarios</mat-label>
               <mat-slide-toggle [checked]="true" [color]="color" class="example-margin"
                 formControlName="mostrar_comentarios">
               </mat-slide-toggle>
               <textarea hidden matInput></textarea>
             </mat-form-field>
-            <mat-form-field appearance="outline" floatLabel="always">
+            <mat-form-field appearance="fill" floatLabel="always">
               <mat-label>Publicado</mat-label>
               <mat-slide-toggle [color]="color" [disabled]="disabled" class="example-margin"
                 formControlName="publicado">
               </mat-slide-toggle>
               <textarea hidden matInput></textarea>
             </mat-form-field>
-            <mat-form-field appearance="outline" floatLabel="always">
+            <mat-form-field appearance="fill" floatLabel="always">
               <mat-label>Descargable</mat-label>
               <mat-slide-toggle [color]="color" [disabled]="disabled" class="example-margin"
                 formControlName="descargable">
               </mat-slide-toggle>
               <textarea hidden matInput></textarea>
             </mat-form-field>
-            <mat-form-field *ngIf="isAdmin|| isJefeCanal" appearance="outline" floatLabel="always">
+            <mat-form-field *ngIf="isAdmin|| isJefeCanal" appearance="fill" floatLabel="always">
               <mat-label>Internacional</mat-label>
               <mat-slide-toggle color="primary" formControlName="internacional">
               </mat-slide-toggle>
               <textarea hidden matInput></textarea>
             </mat-form-field>
-            <mat-form-field *ngIf="isAdmin  || canalHasSeller" appearance="outline">
+            <mat-form-field *ngIf="isAdmin  || canalHasSeller" appearance="fill">
               <mat-label>Precios</mat-label>
               <input hidden matInput type="text">
 
@@ -102,7 +102,7 @@
                 <div *ngFor="let precio of precios; let index= index"
                   class="flex flex-col flex-sm-row items-center w-full border my-2">
 
-                  <mat-form-field appearance="outline" class="m-2">
+                  <mat-form-field appearance="fill" class="m-2">
                     <mat-select (selectionChange)="setTipo($event, precio)"
                       [disabled]="precios.length === 2 ? true : null" [value]="precio.tipo" placeholder="Tipo">
                       <mat-option value="reproduccion">Reproducción</mat-option>
@@ -110,7 +110,7 @@
                     </mat-select>
 
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="m-2">
+                  <mat-form-field appearance="fill" class="m-2">
                     <input (input)="setValorPrecio($event, precio)" [value]="precio.valor" matInput placeholder="Valor"
                       type="number">
                   </mat-form-field>
@@ -124,7 +124,7 @@
             </mat-form-field>
 
 
-            <!--<mat-form-field *ngIf="isAdmin" appearance="outline" floatLabel="never">
+            <!--<mat-form-field *ngIf="isAdmin" appearance="fill" floatLabel="never">
               <mat-label>Precio</mat-label>
               <mat-select formControlName="precio">
                 <mat-option *ngFor="let precio of precios$|async" [value]="precio.id">{{precio.precio}}</mat-option>
@@ -136,7 +136,7 @@
         </div>
         <div class="col-12 col-md-6">
           <div class="file-info-wrapper">
-            <mat-form-field *ngIf="!isTvVivo" appearance="outline" class="" floatLabel="always">
+            <mat-form-field *ngIf="!isTvVivo" appearance="fill" class="" floatLabel="always">
               <mat-label>{{modeloSeleccionado === 'audio' ? 'Audio' : 'Video'}}</mat-label>
               <div class="file-info">
                 <div class="img-container">
@@ -162,7 +162,7 @@
                 Cargar
               </button>
             </mat-form-field>
-            <mat-form-field *ngIf="isTvVivo" appearance="outline" floatLabel="auto">
+            <mat-form-field *ngIf="isTvVivo" appearance="fill" floatLabel="auto">
               <mat-label>Origen</mat-label>
               <mat-select [formControl]="sourceControl">
                 <ng-container *ngIf="isAdmin">
@@ -175,12 +175,12 @@
 
               </mat-select>
             </mat-form-field>
-            <mat-form-field *ngIf="otherSource" appearance="outline">
+            <mat-form-field *ngIf="otherSource" appearance="fill">
               <input [formControl]="otherSourceControl" matInput placeholder="https://domain.com/manifest.m3u8"
                 type="text">
             </mat-form-field>
 
-            <mat-form-field *ngIf="frames" appearance="outline" floatLabel="always">
+            <mat-form-field *ngIf="frames" appearance="fill" floatLabel="always">
               <mat-label>Miniaturas</mat-label>
               <input hidden matInput type="text">
               <div
@@ -190,7 +190,7 @@
               </div>
 
             </mat-form-field>
-            <mat-form-field appearance="outline" class="" floatLabel="always">
+            <mat-form-field appearance="fill" class="" floatLabel="always">
               <mat-label>Imagen de Portada</mat-label>
 
               <div hidden>
@@ -210,7 +210,7 @@
                 Cargar
               </button>
             </mat-form-field>
-            <mat-form-field appearance="outline" class="" floatLabel="always">
+            <mat-form-field appearance="fill" class="" floatLabel="always">
               <mat-label>Subtítulo</mat-label>
 
               <div hidden>
@@ -239,7 +239,7 @@
               de
               reproducción
             </mat-slide-toggle>
-            <mat-form-field *ngIf="showPlaylist" appearance="outline" class="mt-3" floatLabel="auto">
+            <mat-form-field *ngIf="showPlaylist" appearance="fill" class="mt-3" floatLabel="auto">
               <mat-label>Lista de reproducción</mat-label>
               <mat-select [formControl]="playlistControl">
                 <mat-option *ngFor="let lista of playlist" [value]="lista.id">{{lista.nombre}}</mat-option>
@@ -257,7 +257,7 @@
           <div *ngIf="this.modeloSeleccionado=== 'audio'" class="cancion-data">
             <!--
                       <div class="row">
-                        <mat-form-field appearance="outline" class="expand-2">
+                        <mat-form-field appearance="fill" class="expand-2">
                           <mat-label>Disco</mat-label>
                           <mat-select [disabled]="form.get('canal').invalid" formControlName="disco">
                             <mat-option *ngFor="let disco of discos" [value]="disco.id">{{disco.nombre}}
@@ -269,7 +269,7 @@
                             <mat-icon>add</mat-icon>
                           </button>
                         </mat-form-field>
-                        <mat-form-field appearance="outline" class="expand-2">
+                        <mat-form-field appearance="fill" class="expand-2">
                           <mat-label>Año</mat-label>
 
                           <input [matAutocomplete]="auto" aria-label="Number" formControlName="ano" matInput type="text">
@@ -279,14 +279,14 @@
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
-                        <mat-form-field appearance="outline" class="expand-2">
+                        <mat-form-field appearance="fill" class="expand-2">
                           <mat-label>País</mat-label>
                           <input formControlName="pais" matInput name="pais"
                                  type="text">
 
                         </mat-form-field>
 
-                        <mat-form-field appearance="outline" class="expand-2">
+                        <mat-form-field appearance="fill" class="expand-2">
                           <mat-label>Género</mat-label>
                           <mat-select formControlName="genero" multiple name="genero">
                             <mat-option *ngFor="let genero of genres$|async" [value]="genero.id">{{genero.nombre}}</mat-option>
@@ -296,14 +296,14 @@
             -->
             <div class="row">
               <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="autor" placeholder="Autor">
 
                 <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
               </ng-select>
               <!-- <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                           [clearSearchOnAdd]="true" [multiple]="true"
-                          [searchable]="true" appearance="outline"
+                          [searchable]="true" appearance="fill"
                           appendTo="body"
                           bindLabel="nombre"
 
@@ -313,7 +313,7 @@
 
                <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                           [clearSearchOnAdd]="true" [multiple]="true"
-                          [searchable]="true" appearance="outline"
+                          [searchable]="true" appearance="fill"
                           appendTo="body"
                           bindLabel="nombre"
 
@@ -329,7 +329,7 @@
             <div class="form-row">
               <div class="col-12 col-md-6 p-0 flex items-center">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="expand-2" formControlName="autor" placeholder="Autor">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -338,7 +338,7 @@
 
               </div>
               <div class="col-12 col-md-6">
-                <mat-form-field appearance="outline" class="expand-2">
+                <mat-form-field appearance="fill" class="expand-2">
                   <mat-label>Temporada</mat-label>
                   <mat-select [disabled]="form.get('canal').invalid" [required]="getR(this.modeloSeleccionado,'capitulo')"
                     formControlName="temporada" name="temporada">
@@ -363,13 +363,13 @@
               <div class="col-12 col-md-6 p-0 flex items-center">
                 <ng-select (close)="loadExtras()" (search)="searchExtraProductora($event)"
                   [addTag]="addNewExtraProductora" [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true"
-                  appearance="outline" appendTo="body" bindLabel="nombre" class="expand-2" formControlName="productora"
+                  appearance="fill" appendTo="body" bindLabel="nombre" class="expand-2" formControlName="productora"
                   placeholder="Producción">
                   <ng-option *ngFor="let extra of filteredExtraProductora" [value]="extra">{{extra.nombre}}</ng-option>
                 </ng-select>
               </div>
               <div class="col-12 col-md-6">
-                <mat-form-field appearance="outline" class="expand-2">
+                <mat-form-field appearance="fill" class="expand-2">
                   <mat-label>Pais</mat-label>
                   <input [required]="this.modeloSeleccionado=== 'documental'" formControlName="pais" matInput
                     name="pais" type="text">
@@ -383,7 +383,7 @@
           </div>
           <div *ngIf="this.modeloSeleccionado=== 'video'" class="video-data">
             <div class="row">
-              <mat-form-field appearance="outline" class="expand-1">
+              <mat-form-field appearance="fill" class="expand-1">
                 <mat-label>Año</mat-label>
 
                 <input [matAutocomplete]="auto" aria-label="Number" formControlName="ano" matInput type="text">
@@ -395,7 +395,7 @@
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
-              <mat-form-field appearance="outline" class="expand-1">
+              <mat-form-field appearance="fill" class="expand-1">
                 <mat-label>Género</mat-label>
                 <mat-select [required]="getR(this.modeloSeleccionado,'pelicula')" formControlName="genero" multiple
                   name="genero">
@@ -406,7 +406,7 @@
               </mat-form-field>
 
               <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="productor" placeholder="Producción">
                 <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
               </ng-select>
@@ -414,13 +414,13 @@
             <div class="row">
 
               <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="interprete" placeholder="Intérprete">
                 <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
               </ng-select>
 
               <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="director" placeholder="Director">
                 <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
               </ng-select>
@@ -432,7 +432,7 @@
           <div *ngIf="this.modeloSeleccionado=== 'videoclip'" class="video-data">
             <div class="row">
               <div class="col-12 col-md-4">
-                <mat-form-field appearance="outline" floatLabel="always">
+                <mat-form-field appearance="fill" floatLabel="always">
                   <mat-label>Provee Portada</mat-label>
                   <mat-slide-toggle color="primary" formControlName="portada">
                   </mat-slide-toggle>
@@ -440,7 +440,7 @@
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-4">
-                <mat-form-field appearance="outline" class="mb-0 w-full">
+                <mat-form-field appearance="fill" class="mb-0 w-full">
                   <mat-label>Fecha de Lanzamiento</mat-label>
                   <input [matDatepicker]="picker" formControlName="release_date" matInput>
                   <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
@@ -449,7 +449,7 @@
 
               </div>
               <div class="col-12 col-md-4">
-                <mat-form-field appearance="outline" class="mb-0 w-full">
+                <mat-form-field appearance="fill" class="mb-0 w-full">
                   <mat-label>Fecha de Venta</mat-label>
                   <input [matDatepicker]="picker2" formControlName="sale_start_date" matInput>
                   <mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
@@ -460,7 +460,7 @@
 
             <div class="row">
               <div class="col-12 col-md-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Año</mat-label>
 
                   <input [matAutocomplete]="auto" aria-label="Number" formControlName="ano" matInput type="text">
@@ -475,7 +475,7 @@
 
               </div>
               <div class="col-12 col-md-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Género</mat-label>
                   <mat-select formControlName="genero" multiple name="genero" required>
                     <mat-option *ngFor="let genero of genres$|async" [value]="genero.id">{{genero.nombre}}</mat-option>
@@ -488,7 +488,7 @@
               <div class="col-12 col-md-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('productor').touched || myform.submitted) &&form.get('productor').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="w-full" formControlName="productor" placeholder="Producción general">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -501,7 +501,7 @@
               <div class="col-12 col-md-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('interprete').touched || myform.submitted) &&form.get('interprete').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="expand-2" formControlName="interprete" placeholder="Intérprete">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -510,7 +510,7 @@
               <div class="col-12 col-md-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('director').touched || myform.submitted) &&form.get('director').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="expand-2" formControlName="director" placeholder="Dirección audiovisual">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -520,7 +520,7 @@
                 <!--            director_fotografico-->
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('director_fotografico').touched || myform.submitted) &&form.get('director_fotografico').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="expand-2" formControlName="director_fotografico"
                   placeholder="Dirección de fotografía">
                   <ng-option *ngFor="let persona of filteredPersonasList"
@@ -534,7 +534,7 @@
                 <!--            director_arte-->
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('director_arte').touched || myform.submitted) &&form.get('director_arte').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="expand-2" formControlName="director_arte" placeholder="Dirección de arte">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -544,7 +544,7 @@
                 <!--            director_artistico  OPCIONAL-->
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('director_artistico').touched || myform.submitted) &&form.get('director_artistico').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="expand-2" formControlName="director_artistico"
                   placeholder="Dirección artística">
                   <ng-option *ngFor="let persona of filteredPersonasList"
@@ -557,7 +557,7 @@
               <div class="col-12 col-md-6">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('guionista').touched || myform.submitted) &&form.get('guionista').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="w-full" formControlName="guionista" placeholder="Guionista">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -568,7 +568,7 @@
                 </mat-error>
               </div>
               <div class="col-12 col-md-6">
-                <mat-form-field appearance="outline" class="mb-0 w-full">
+                <mat-form-field appearance="fill" class="mb-0 w-full">
                   <mat-label>Sello</mat-label>
                   <input formControlName="sello" matInput type="text">
                 </mat-form-field>
@@ -579,14 +579,14 @@
           <div *ngIf="this.modeloSeleccionado=== 'pelicula'" class="pelicula-data">
             <div class="row">
 
-              <mat-form-field appearance="outline" class="expand-2">
+              <mat-form-field appearance="fill" class="expand-2">
                 <mat-label>País</mat-label>
                 <input [required]="this.modeloSeleccionado=== 'pelicula'" formControlName="pais" matInput name="pais"
                   type="text">
                 <mat-error *ngIf="form.get('pais').hasError('required')">El país es requerido.</mat-error>
 
               </mat-form-field>
-              <mat-form-field appearance="outline" class="expand-2">
+              <mat-form-field appearance="fill" class="expand-2">
                 <mat-label>Año</mat-label>
 
                 <input [matAutocomplete]="auto" aria-label="Number" formControlName="ano" matInput required type="text">
@@ -598,7 +598,7 @@
                 </mat-autocomplete>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="expand-2">
+              <mat-form-field appearance="fill" class="expand-2">
                 <mat-label>Género</mat-label>
                 <mat-select [required]="this.modeloSeleccionado=== 'pelicula'" formControlName="genero" multiple
                   name="genero">
@@ -610,14 +610,14 @@
             </div>
             <div class="row">
               <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="director" placeholder="Director">
                 <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
               </ng-select>
 
               <ng-select (close)="loadExtras()" (search)="searchExtraProductora($event)"
                 [addTag]="addNewExtraProductora" [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true"
-                appearance="outline" appendTo="body" bindLabel="nombre" class="expand-2" formControlName="productora"
+                appearance="fill" appendTo="body" bindLabel="nombre" class="expand-2" formControlName="productora"
                 placeholder="Producción">
                 <ng-option *ngFor="let extra of filteredExtraProductora" [value]="extra">{{extra.nombre}}</ng-option>
               </ng-select>
@@ -626,14 +626,14 @@
             <div class="row">
 
               <ng-select (close)="loadExtras()" (search)="searchExtraPremio($event)" [addTag]="addNewExtraPremio"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="premio" placeholder="Premio">
                 <ng-option *ngFor="let extra of filteredExtraPremio" [value]="extra">{{extra.nombre}}</ng-option>
               </ng-select>
 
 
               <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="reparto" placeholder="Reparto">
                 <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
               </ng-select>
@@ -644,19 +644,19 @@
             <div class="row">
 
               <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="fotografia" placeholder="Fotografía">
                 <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
               </ng-select>
 
               <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="musica" placeholder="Música">
                 <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
               </ng-select>
 
               <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="guion" placeholder="Guión">
                 <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
               </ng-select>
@@ -694,7 +694,7 @@
                                        class="expand-2" formControlName="autor"
                                        label="Autor"></app-custom-select-field>-->
               <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                 bindLabel="nombre" class="expand-2" formControlName="autor" placeholder="Autor">
                 <ng-option *ngFor="let persona of filteredPersonasList" [value]="persona">{{persona.nombre}}</ng-option>
               </ng-select>
@@ -703,7 +703,7 @@
           </div>
           <div *ngIf="this.modeloSeleccionado=== 'capitulo'" class="serie-data">
             <div class="row">
-              <mat-form-field appearance="outline" class="expand-1">
+              <mat-form-field appearance="fill" class="expand-1">
                 <mat-label>Serie</mat-label>
                 <mat-select (selectionChange)="selectSerie($event)" [required]="this.modeloSeleccionado=== 'capitulo'"
                   formControlName="serie" name="serie">
@@ -718,7 +718,7 @@
               </mat-form-field>
 
 
-              <mat-form-field appearance="outline" class="expand-1">
+              <mat-form-field appearance="fill" class="expand-1">
                 <mat-label>Temporada</mat-label>
                 <mat-select [disabled]="form.get('canal').invalid || form.get('serie').invalid"
                   [required]="this.modeloSeleccionado=== 'capitulo'" formControlName="temporada" name="temporada">
@@ -733,7 +733,7 @@
                 </button>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="expand-1">
+              <mat-form-field appearance="fill" class="expand-1">
                 <mat-label>Número</mat-label>
                 <input formControlName="numero" matInput type="text">
                 <!--<mat-select [disabled]="form.get('temporada').invalid" [required]="this.modeloSeleccionado=== 'capitulo'"
@@ -754,7 +754,7 @@
           <div *ngIf="this.modeloSeleccionado=== 'cancion'" class="cancion-data">
             <div class="row">
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" floatLabel="always">
+                <mat-form-field appearance="fill" floatLabel="always">
                   <mat-label>Provee Portada</mat-label>
                   <mat-slide-toggle color="primary" formControlName="portada">
                   </mat-slide-toggle>
@@ -762,7 +762,7 @@
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" floatLabel="always">
+                <mat-form-field appearance="fill" floatLabel="always">
                   <mat-label>Control Publishing</mat-label>
                   <mat-slide-toggle color="primary" formControlName="control_publishing">
                   </mat-slide-toggle>
@@ -770,7 +770,7 @@
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Disco</mat-label>
                   <mat-select [disabled]="form.get('canal').invalid" formControlName="disco">
                     <mat-option *ngFor="let disco of discos" [value]="disco.id">{{disco.nombre}}
@@ -785,7 +785,7 @@
 
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Año</mat-label>
 
                   <input [matAutocomplete]="auto" aria-label="Number" formControlName="ano" matInput type="text">
@@ -798,7 +798,7 @@
 
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>País</mat-label>
                   <input formControlName="pais" matInput name="pais" type="text">
 
@@ -806,7 +806,7 @@
 
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Género</mat-label>
                   <mat-select formControlName="genero" multiple name="genero">
                     <mat-option *ngFor="let genero of genres$|async" [value]="genero.id">{{genero.nombre}}</mat-option>
@@ -816,7 +816,7 @@
               </div>
               <div class="col-12 col-md-3 col-sm-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="w-full" formControlName="interprete" placeholder="Intérprete">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -825,7 +825,7 @@
               </div>
               <div class="col-12 col-md-3 col-sm-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="w-full" formControlName="productor" placeholder="Producción">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -834,13 +834,13 @@
               </div>
 
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Sello</mat-label>
                   <input formControlName="sello" matInput type="text">
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Fecha de venta</mat-label>
                   <input [matDatepicker]="saleDPicker" formControlName="sale_start_date" matInput type="text">
                   <mat-datepicker-toggle [for]="saleDPicker" matSuffix></mat-datepicker-toggle>
@@ -848,7 +848,7 @@
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Fecha de Lanzamiento</mat-label>
                   <input [matDatepicker]="releaseDPicker" formControlName="release_date" matInput type="text">
                   <mat-datepicker-toggle [for]="releaseDPicker" matSuffix></mat-datepicker-toggle>
@@ -856,37 +856,37 @@
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>País fonograma</mat-label>
                   <input formControlName="pais_fonograma" matInput type="text">
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Código producto</mat-label>
                   <input formControlName="codigo_producto" matInput type="text">
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Número de track</mat-label>
                   <input formControlName="numero_track" matInput type="text">
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Título de track</mat-label>
                   <input formControlName="titulo_track" matInput type="text">
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>ISRC</mat-label>
                   <input formControlName="isrc" matInput type="text">
                 </mat-form-field>
               </div>
               <div class="col-12 col-md-3 col-sm-4">
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Masteright</mat-label>
                   <input formControlName="masterights" matInput type="text">
                 </mat-form-field>
@@ -894,7 +894,7 @@
               <div class="col-12 col-md-3 col-sm-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('invitado').touched || myform.submitted) &&form.get('invitado').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="w-full" formControlName="invitado" placeholder="Invitado">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -903,7 +903,7 @@
               <div class="col-12 col-md-3 col-sm-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('autor').touched || myform.submitted) &&form.get('autor').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="w-full" formControlName="autor" placeholder="Autor">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -912,7 +912,7 @@
               <div class="col-12 col-md-3 col-sm-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('performer').touched || myform.submitted) &&form.get('performer').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="w-full" formControlName="performer" placeholder="Artista Principal">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -921,7 +921,7 @@
               <div class="col-12 col-md-3 col-sm-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('publisher').touched || myform.submitted) &&form.get('publisher').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="w-full" formControlName="publisher" placeholder="Publisher">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -930,7 +930,7 @@
               <div class="col-12 col-md-3 col-sm-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('performer').touched || myform.submitted) &&form.get('performer').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="w-full" formControlName="performer" placeholder="Performer">
                   <ng-option *ngFor="let persona of filteredPersonasList"
                     [value]="persona">{{persona.nombre}}</ng-option>
@@ -939,7 +939,7 @@
               <div class="col-12 col-md-3 col-sm-4">
                 <ng-select (close)="loadPersonas()" (search)="searchPersona($event)" [addTag]="addNewPersona"
                   [class.invalid-select]="(form.get('productor_ejecutivo').touched || myform.submitted) &&form.get('productor_ejecutivo').hasError('required')"
-                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="outline" appendTo="body"
+                  [clearSearchOnAdd]="true" [multiple]="true" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" class="w-full" formControlName="productor_ejecutivo"
                   placeholder="Productor Ejecutivo">
                   <ng-option *ngFor="let persona of filteredPersonasList"
@@ -955,7 +955,7 @@
           <div *ngIf="this.modeloSeleccionado=== 'eventotipologia'" class="serie-data">
             <div class="row">
               <div class="col-12 col-md-6">
-                <ng-select [items]="eventos$ |async" [searchable]="true" appearance="outline" appendTo="body"
+                <ng-select [items]="eventos$ |async" [searchable]="true" appearance="fill" appendTo="body"
                   bindLabel="nombre" bindValue="id" formControlName="evento" placeholder="Evento">
                 </ng-select>
 

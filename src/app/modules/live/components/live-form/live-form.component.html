@@ -2,22 +2,22 @@
   [title]="type === 'ADD' ? 'Adicionar directa' : 'Editar directa'">
   <ng-container content>
     <form [formGroup]="liveForm" class="grid grid-cols-none md:grid-cols-2 gap-4">
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Nombre</mat-label>
         <input formControlName="nombre" matInput type="text">
         <mat-error *ngIf="liveForm.get('nombre').hasError('required')">Nombre requerido</mat-error>
       </mat-form-field>
 
-      <ng-select [items]="canales$ | async" [searchable]="true" [virtualScroll]="true" appearance="outline"
+      <ng-select [items]="canales$ | async" [searchable]="true" [virtualScroll]="true" appearance="fill"
         appendTo="body" bindLabel="nombre" bindValue="id" formControlName="canal" placeholder="Canal"></ng-select>
 
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Descripción</mat-label>
         <textarea formControlName="descripcion" matInput rows="5"></textarea>
         <mat-error *ngIf="liveForm.get('descripcion').hasError('required')">Descripción requerida</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="" floatLabel="always">
+      <mat-form-field appearance="fill" class="" floatLabel="always">
         <mat-label>Imagen de Portada</mat-label>
         <div hidden>
           <input #imagen (change)="selectImg(imagen)" accept="image/*" id="imagenPortada" type="file">
@@ -32,7 +32,7 @@
           mat-raised-button>Cargar</button>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Clave emisión</mat-label>
         <input formControlName="clave_emision" matInput readonly type="text">
         <div class="flex items-center" matSuffix>
@@ -45,7 +45,7 @@
         </div>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>URL de la emisión</mat-label>
         <mat-select formControlName="url_emision" readonly>
           <mat-option value="rtmp://live.picta.cu:1935/stream">Video - rtmp://live.picta.cu:1935/stream</mat-option>
@@ -58,7 +58,7 @@
         </div>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="mt-3">
+      <mat-form-field appearance="fill" class="mt-3">
         <mat-label>Palabras Claves</mat-label>
         <mat-chip-grid #chipList required>
           <mat-chip-option (removed)="remove(palabra)" *ngFor="let palabra of this.selectedPalabras" [removable]="true"
@@ -78,35 +78,35 @@
         </mat-autocomplete>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Precio</mat-label>
         <mat-select formControlName="precios">
           <mat-option *ngFor="let precio of precios$|async" [value]="precio.id">{{precio.precio}}</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="mt-3" floatLabel="always">
+      <mat-form-field appearance="fill" class="mt-3" floatLabel="always">
         <mat-label>Chat</mat-label>
         <mat-slide-toggle color="primary" formControlName="mostrar_chat">
         </mat-slide-toggle>
         <textarea hidden matInput></textarea>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="mt-3" floatLabel="always">
+      <mat-form-field appearance="fill" class="mt-3" floatLabel="always">
         <mat-label>Comentarios</mat-label>
         <mat-slide-toggle color="primary" formControlName="mostrar_comentarios">
         </mat-slide-toggle>
         <textarea hidden matInput></textarea>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="mt-3" floatLabel="always">
+      <mat-form-field appearance="fill" class="mt-3" floatLabel="always">
         <mat-label>Publicado</mat-label>
         <mat-slide-toggle color="primary" formControlName="publicado">
         </mat-slide-toggle>
         <textarea hidden matInput></textarea>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="mt-3" floatLabel="always">
+      <mat-form-field appearance="fill" class="mt-3" floatLabel="always">
         <mat-label>Internacional</mat-label>
         <mat-slide-toggle color="primary" formControlName="internacional">
         </mat-slide-toggle>

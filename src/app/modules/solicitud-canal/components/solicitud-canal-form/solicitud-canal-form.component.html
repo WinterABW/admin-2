@@ -2,23 +2,23 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12 col-md-6 flex flex-col">
-        <mat-form-field appearance="outline" floatLabel="auto">
+        <mat-form-field appearance="fill" floatLabel="auto">
           <mat-label>Nombre del canal</mat-label>
           <input formControlName="nombre" matInput required type="text">
           <mat-error *ngIf="form.get('nombre').hasError('required')">El nombre es requerido</mat-error>
         </mat-form-field>
-        <mat-form-field appearance="outline" floatLabel="auto">
+        <mat-form-field appearance="fill" floatLabel="auto">
           <mat-label>Alias del canal</mat-label>
           <input formControlName="alias" matInput required type="text">
           <mat-error *ngIf="form.get('alias').hasError('required')">El alias es requerido</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" floatLabel="auto">
+        <mat-form-field appearance="fill" floatLabel="auto">
           <mat-label>Descripción</mat-label>
           <textarea formControlName="descripcion" matInput required rows="8"></textarea>
           <mat-error *ngIf="form.get('descripcion').hasError('required')">La descripción es requerida</mat-error>
         </mat-form-field>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="fill">
           <mat-label>Palabras Claves</mat-label>
           <mat-chip-grid #chipList required>
             <mat-chip-option (removed)="remove(palabra)" *ngFor="let palabra of this.selectedPalabras"
@@ -38,7 +38,7 @@
           </mat-autocomplete>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" floatLabel="always">
+        <mat-form-field appearance="fill" floatLabel="always">
           <mat-label>Publicado</mat-label>
           <mat-slide-toggle color="primary" formControlName="publicado">
           </mat-slide-toggle>
@@ -46,7 +46,7 @@
         </mat-form-field>
       </div>
       <div class="col-12 col-md-6 flex flex-col">
-        <mat-form-field appearance="outline" floatLabel="always">
+        <mat-form-field appearance="fill" floatLabel="always">
           <mat-label>Imagen de portada</mat-label>
           <div class="flex flex-col">
             <div hidden>
@@ -69,7 +69,7 @@
 
         </mat-form-field>
 
-        <mat-form-field appearance="outline" floatLabel="always">
+        <mat-form-field appearance="fill" floatLabel="always">
           <mat-label>Imagen de avatar</mat-label>
           <div class="flex flex-row items-center justify-content-start">
             <div hidden>

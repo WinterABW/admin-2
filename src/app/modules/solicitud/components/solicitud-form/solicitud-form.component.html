@@ -3,7 +3,7 @@
   <ng-container content>
     <form (ngSubmit)="save()" [formGroup]="form" class="grid grid-cols-none md:grid-cols-2 gap-6">
       <div class="flex justify-center items-center my-4 md:col-span-2">
-        <mat-form-field appearance="outline" floatLabel="always">
+        <mat-form-field appearance="fill" floatLabel="always">
           <mat-label>Tipo</mat-label>
           <input hidden matInput type="text">
           <mat-button-toggle-group formControlName="type">
@@ -13,21 +13,21 @@
         </mat-form-field>
       </div>
 
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>{{ type === 'NATURAL' ? 'Nombre(s) y Apellidos' : 'Nombre de la Empresa' }}</mat-label>
         <input formControlName="name" matInput required type="text">
         <mat-error *ngIf="form.get('name').touched && form.get('name').hasError('required')">El nombre es
           obligatorio</mat-error>
       </mat-form-field>
 
-      <mat-form-field *ngIf="type === 'LEGAL'" appearance="outline" floatLabel="auto">
+      <mat-form-field *ngIf="type === 'LEGAL'" appearance="fill" floatLabel="auto">
         <mat-label>Código REUUP / NIT</mat-label>
         <input formControlName="reuup" matInput required type="text">
         <mat-error *ngIf="form.get('name').touched && form.get('reuup').hasError('required')">El Código REUUP/NIT es
           obligatorio</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label> {{ type === 'NATURAL' ? 'Carnet de identidad' : 'Carnet de identidad del representante legal'
           }}</mat-label>
         <input formControlName="ci" matInput maxlength="11" required type="text">
@@ -42,7 +42,7 @@
           edad.</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Correo</mat-label>
         <input formControlName="email" matInput required type="email">
         <mat-error *ngIf="form.get('email').touched && form.get('email').hasError('required')">El correo es
@@ -50,20 +50,20 @@
       </mat-form-field>
 
       <ng-select (change)="selectProvince($event)" [items]="provinces$ | async" [loading]="loadingProvinces"
-        [searchable]="true" appearance="outline" bindLabel="name" bindValue="id" formControlName="province"
+        [searchable]="true" appearance="fill" bindLabel="name" bindValue="id" formControlName="province"
         placeholder="Provincias">
       </ng-select>
-      <ng-select [items]="municipalities$ | async" [loading]="loadingMunicipalities" appearance="outline"
+      <ng-select [items]="municipalities$ | async" [loading]="loadingMunicipalities" appearance="fill"
         bindLabel="name" bindValue="id" formControlName="municipality" placeholder="Municipios">
       </ng-select>
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>{{type === 'NATURAL' ? 'Dirección' : 'Domicilio Legal'}}</mat-label>
         <input formControlName="address" matInput required type="text">
         <mat-error *ngIf="form.get('address').touched && form.get('address').hasError('required')">La dirección es
           obligatorio</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Tarjeta Bancaria</mat-label>
         <input formControlName="account" matInput [required]="type === 'NATURAL'" type="text" minlength="16"
           maxlength="16">
@@ -78,35 +78,35 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Cuenta Bancaria</mat-label>
         <input formControlName="bank_card" matInput required type="text">
         <mat-error *ngIf="form.get('bank_card').touched && form.get('bank_card').hasError('required')">La cuenta es
           obligatoria</mat-error>
       </mat-form-field>
 
-      <mat-form-field *ngIf="type === 'NATURAL'" appearance="outline" floatLabel="auto">
+      <mat-form-field *ngIf="type === 'NATURAL'" appearance="fill" floatLabel="auto">
         <mat-label>Número de licencia CP</mat-label>
         <input formControlName="license" matInput type="text">
         <mat-error *ngIf="form.get('license').touched && form.get('license').hasError('required')">El número de licencia
           CP es obligatorio</mat-error>
       </mat-form-field>
 
-      <mat-form-field *ngIf="type === 'NATURAL'" appearance="outline" floatLabel="auto">
+      <mat-form-field *ngIf="type === 'NATURAL'" appearance="fill" floatLabel="auto">
         <mat-label>Código NIT</mat-label>
         <input formControlName="nit" matInput type="text">
         <mat-error *ngIf="form.get('nit').touched && form.get('nit').hasError('required')">El código NIT es
           obligatorio</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" floatLabel="auto">
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Sucursal bancaria</mat-label>
         <input formControlName="bank_branch" matInput required type="text">
         <mat-error *ngIf="form.get('bank_branch').touched && form.get('bank_branch').hasError('required')">La sucursal
           bancaria es obligatoria</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" floatLabel="auto" *ngIf="solicitud">
+      <mat-form-field appearance="fill" floatLabel="auto" *ngIf="solicitud">
         <mat-label>Código streaming</mat-label>
         <input formControlName="provider_streaming" matInput type="text">
         <mat-error
@@ -114,7 +114,7 @@
           contener números.</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" floatLabel="auto" *ngIf="solicitud">
+      <mat-form-field appearance="fill" floatLabel="auto" *ngIf="solicitud">
         <mat-label>Código descarga</mat-label>
         <input formControlName="provider_download" matInput type="text">
         <mat-error
@@ -122,7 +122,7 @@
           contener números.</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" *ngIf="solicitud">
+      <mat-form-field appearance="fill" *ngIf="solicitud">
         <mat-select [value]="solicitud.estado"
           [disabled]="!form.get('provider_streaming').value || !form.get('provider_download').value"
           [formControl]="aceptadaControl">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Activity, activities } from './activity-timeline-data';
 import { DemoMaterialModule } from 'src/app/demo-material-module';
 import { NgFor, NgIf } from '@angular/common';
@@ -10,7 +10,7 @@ import { NgFor, NgIf } from '@angular/common';
   templateUrl: './activity-timeline.component.html'
 })
 export class ActivityTimelineComponent implements OnInit {
-
+  @Input() comentarios: any;
   activityData: Activity[];
 
   constructor() {
@@ -20,6 +20,8 @@ export class ActivityTimelineComponent implements OnInit {
 
 
   ngOnInit(): void {
+    console.log(this.comentarios);
+    
   }
 
 }

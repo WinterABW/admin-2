@@ -7,9 +7,10 @@ import { PubData } from 'src/app/common/interfaces/Pubdata';
 import { Publicacion } from 'src/app/models/publicacion';
 import { User } from 'src/app/models/user';
 import { PublicationService } from 'src/app/services/publication.service';
-import { CommentService } from 'src/app/services/comment.service';
+
 import { SubscriptionService } from 'src/app/services/subscription.service';
 import { UsuariosService } from 'src/app/services/user.service';
+import { CommentService } from '../../comentario/services/comment.service';
 
 @Component({
   selector: 'app-publication-dash',

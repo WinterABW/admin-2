@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,14 +15,21 @@ import { PublicationCommentsDialogComponent } from '../publication-comments-dial
 import { PublicationDownloadDialogComponent } from '../publication-download-dialog/publication-download-dialog.component';
 import { PublicationReproduccionDialogComponent } from '../publication-reproduccion-dialog/publication-reproduccion-dialog.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { debounceTime, distinctUntilChanged, finalize, map, shareReplay, switchMap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  finalize,
+  map,
+  shareReplay,
+  switchMap,
+} from 'rxjs/operators';
 import { PublicationVoteDialogComponent } from '../publication-vote-dialog/publication-vote-dialog.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { PublicationBottomSheetComponent } from '../publication-bottom-sheet/publication-bottom-sheet.component';
 import { DetailsPublicationComponent } from '../details-publication/details-publication.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CanalService } from '../../../../services/canal.service';
-import { CommentService } from '../../../../services/comment.service';
+import { CommentService } from '../../../comentario/services/comment.service';
 import { AuthService } from '../../../../services/auth.service';
 import { Publicacion, Tipologia } from '../../../../models/publicacion';
 import { PictaResponse } from '../../../../models/response.picta.model';
@@ -38,14 +52,13 @@ declare const Hammer: any;
     trigger('filters', [
       transition(':enter', [
         style({ opacity: 0 }),
-        animate('500ms ease-out', style({ opacity: 1 }))
-      ])
-    ])
+        animate('500ms ease-out', style({ opacity: 1 })),
+      ]),
+    ]),
   ],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class PublicationListComponent implements OnInit, AfterViewInit {
-
   displayedColumns: string[] = [
     'url_imagen',
     'estado',
@@ -55,7 +68,7 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
     'likes',
     'usuario',
     'canal',
-    'operaciones'
+    'operaciones',
   ];
 
   resultsLength = 0;
@@ -69,9 +82,9 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
   filters: UntypedFormGroup;
   tipologias: Observable<Tipologia[]>;
   extra: { ordering: string };
-  isHanset$ = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(value => value.matches)
-  );
+  isHanset$ = this.breakpointObserver
+    .observe(Breakpoints.Handset)
+    .pipe(map((value) => value.matches));
   tableScroll: any;
   totalCount = 0;
   loading = false;
@@ -95,14 +108,15 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute
   ) {
     this.initFilterForm();
-    this.canales$ = this.canalService.getA({ ordering: 'nombre', page_size: 100 }).pipe(map(list => [{ nombre: 'Ver todos' }, ...list]));
+    this.canales$ = this.canalService
+      .getA({ ordering: 'nombre', page_size: 100 })
+      .pipe(map((list) => [{ nombre: 'Ver todos' }, ...list]));
     this.tipologias = this.tipologiaService.getAll();
-    this.publicaciones = route.snapshot.data['list'].results  ;
-
+    this.publicaciones = route.snapshot.data['list'].results;
   }
 
   get isAdmin() {
-    return this.authService.groups.some(g => g.name === 'Administrador');
+    return this.authService.groups.some((g) => g.name === 'Administrador');
   }
 
   ngOnInit() {
@@ -118,24 +132,23 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Confirmación',
-        msg: '¿Está seguro que desea eliminar esta publicación?'
-      }
+        msg: '¿Está seguro que desea eliminar esta publicación?',
+      },
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.pubService.deletePublication(id)
+        this.pubService
+          .deletePublication(id)
           .pipe(
             this.toast.observe({
               loading: 'Eliminando publicación',
               success: 'Publicación eliminada correctamente',
-              error: `No se pudo eliminar la publicación.`
-
-            }))
-          .subscribe(
-            () => {
-              this.getListByParams(true);
-            }
-          );
+              error: `No se pudo eliminar la publicación.`,
+            })
+          )
+          .subscribe(() => {
+            this.getListByParams(true);
+          });
       }
     });
   }
@@ -144,30 +157,48 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Confirmación',
-        msg: `¿Está seguro que desea ${!pub.publicado ? 'publicar' : 'ocultar'
-          } esta publicación?`
-      }
+        msg: `¿Está seguro que desea ${
+          !pub.publicado ? 'publicar' : 'ocultar'
+        } esta publicación?`,
+      },
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         if (pub.tipo === 'publicacion_en_vivo') {
-          this.pubService.setStatus(pub.id, !pub.publicado, pub.tipo)
+          this.pubService
+            .setStatus(pub.id, !pub.publicado, pub.tipo)
             .pipe(
               this.toast.observe({
                 loading: 'Actualizando publicación',
                 success: 'Publicación actualizada correctamente',
-                error: `No se pudo ${pub.publicado ? 'publicar' : 'despublicar'} la publicación.`
-              }))
-            .subscribe(() => { this.getListByParams(true) });
+                error: `No se pudo ${
+                  pub.publicado ? 'publicar' : 'despublicar'
+                } la publicación.`,
+              })
+            )
+            .subscribe(() => {
+              this.getListByParams(true);
+            });
         } else {
-          this.pubService.setStatus(pub.id, !pub.publicado, pub.tipo, pub.categoria.tipologia.id)
+          this.pubService
+            .setStatus(
+              pub.id,
+              !pub.publicado,
+              pub.tipo,
+              pub.categoria.tipologia.id
+            )
             .pipe(
               this.toast.observe({
                 loading: 'Actualizando publicación',
                 success: 'Publicación actualizada correctamente',
-                error: `No se pudo ${pub.publicado ? 'publicar' : 'despublicar'} la publicación.`
-              }))
-            .subscribe(() => { this.getListByParams(true) });
+                error: `No se pudo ${
+                  pub.publicado ? 'publicar' : 'despublicar'
+                } la publicación.`,
+              })
+            )
+            .subscribe(() => {
+              this.getListByParams(true);
+            });
         }
       }
     });
@@ -180,8 +211,9 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
   sortBy(evt: Sort) {
     if (evt.active) {
       if (evt.direction !== '') {
-        this.extra = { ordering: evt.direction === 'asc' ? evt.active : '-' + evt.active };
-
+        this.extra = {
+          ordering: evt.direction === 'asc' ? evt.active : '-' + evt.active,
+        };
       } else {
         delete this.extra.ordering;
       }
@@ -210,8 +242,9 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
       filters.page = 1;
       this.matPaginator.pageIndex = 0;
     }
-    this.pubService.getAll({ ...filters, ...this.extra })
-      .pipe(finalize(() => this.isLoadingResults = false))
+    this.pubService
+      .getAll({ ...filters, ...this.extra })
+      .pipe(finalize(() => (this.isLoadingResults = false)))
       .subscribe((resp: any) => {
         this.publicaciones = resp.results;
         this.matPaginator.length = resp.count;
@@ -222,71 +255,80 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
   toggleDescargable({ id, descargable, tipo, categoria, url_manifiesto }) {
     const minioID = this.getMinioID(url_manifiesto);
 
-    this.pubService.update(id, { descargable: !descargable, tipo, tipologia: categoria.tipologia.id })
+    this.pubService
+      .update(id, {
+        descargable: !descargable,
+        tipo,
+        tipologia: categoria.tipologia.id,
+      })
       .pipe(
         this.toast.observe({
           loading: 'Actualizando publicación',
           success: 'Publicación actualizada correctamente',
-          error: 'No se pudo actualizar la publicación'
-
+          error: 'No se pudo actualizar la publicación',
         }),
-        switchMap(() => !descargable ? this.pubService.generarDescargaLocal(minioID) : this.pubService.deleteDescarga(minioID))
+        switchMap(() =>
+          !descargable
+            ? this.pubService.generarDescargaLocal(minioID)
+            : this.pubService.deleteDescarga(minioID)
+        )
       )
       .subscribe(() => {
         this.getListByParams(true);
       });
-
   }
 
   seeComments({ id }) {
-    this.commentService.get_comentarios({ publicacion_id: id }).subscribe((response: PictaResponse<any>) => {
-      const { results, count, next } = response;
-      this.dialog.open(PublicationCommentsDialogComponent, {
-        maxHeight: '90vh',
-        maxWidth: '90vw',
-        minWidth: '50vw',
-        data: {
-          comments: results,
-          total: count,
-          next
-        }
+    this.commentService
+      .get_comentarios({ publicacion_id: id })
+      .subscribe((response: PictaResponse<any>) => {
+        const { results, count, next } = response;
+        this.dialog.open(PublicationCommentsDialogComponent, {
+          maxHeight: '90vh',
+          maxWidth: '90vw',
+          minWidth: '50vw',
+          data: {
+            comments: results,
+            total: count,
+            next,
+          },
+        });
       });
-
-    });
-
   }
 
   seeDownloads({ id }) {
-    this.downloadService.getAll({ publicacion_id: id }).subscribe((response: PictaResponse<any>) => {
-      const { results, count, next } = response;
-      this.dialog.open(PublicationDownloadDialogComponent, {
-        maxHeight: '90vh', data: {
-          downloads: results,
-          total: count,
-          next
-        }
+    this.downloadService
+      .getAll({ publicacion_id: id })
+      .subscribe((response: PictaResponse<any>) => {
+        const { results, count, next } = response;
+        this.dialog.open(PublicationDownloadDialogComponent, {
+          maxHeight: '90vh',
+          data: {
+            downloads: results,
+            total: count,
+            next,
+          },
+        });
       });
-
-    });
-
   }
 
   seeViews({ id }) {
-    this.reproduccionService.getAll({ publicacion_id: id, page_size: 500 }).subscribe((response: PictaResponse<any>) => {
-      const { results, count, next } = response;
-      this.dialog.open(PublicationReproduccionDialogComponent, {
-        maxHeight: '90vh', data: {
-          reproductions: results.filter(view => view.usuario.username),
-          total: count,
-          next
-        }
+    this.reproduccionService
+      .getAll({ publicacion_id: id, page_size: 500 })
+      .subscribe((response: PictaResponse<any>) => {
+        const { results, count, next } = response;
+        this.dialog.open(PublicationReproduccionDialogComponent, {
+          maxHeight: '90vh',
+          data: {
+            reproductions: results.filter((view) => view.usuario.username),
+            total: count,
+            next,
+          },
+        });
       });
-
-    });
   }
 
   ngAfterViewInit(): void {
-
     /*     this.isHanset$.subscribe(value => {
           if (!value) {
             this.setupScrollTable();
@@ -299,32 +341,36 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
   }
 
   change(id, tipologia) {
-    this.pubService.update(id, { convertido: true, tipo: 'publicacion', tipologia }).subscribe();
+    this.pubService
+      .update(id, { convertido: true, tipo: 'publicacion', tipologia })
+      .subscribe();
     this.getListByParams(true);
   }
 
   seeLikes({ id }) {
-    this.votoService.getAll({ publicacion_id: id, page_size: 500 }).subscribe((response: PictaResponse<any>) => {
-      const { results, count, next } = response;
-      this.dialog.open(PublicationVoteDialogComponent, {
-        maxHeight: '90vh', data: {
-          likes: results.filter(vote => vote.valor),
-          dislikes: results.filter(vote => !vote.valor),
-          total: count,
-          next
-        }
+    this.votoService
+      .getAll({ publicacion_id: id, page_size: 500 })
+      .subscribe((response: PictaResponse<any>) => {
+        const { results, count, next } = response;
+        this.dialog.open(PublicationVoteDialogComponent, {
+          maxHeight: '90vh',
+          data: {
+            likes: results.filter((vote) => vote.valor),
+            dislikes: results.filter((vote) => !vote.valor),
+            total: count,
+            next,
+          },
+        });
       });
-
-    });
   }
 
   openBottomSheet(publicacion: any) {
     const ref = this.bottomSheet.open(PublicationBottomSheetComponent, {
       data: {
-        publicacion
-      }
+        publicacion,
+      },
     });
-    ref.afterDismissed().subscribe(result => {
+    ref.afterDismissed().subscribe((result) => {
       if (result === 'delete') {
         this.eliminarPublicacion(publicacion.id);
       }
@@ -350,18 +396,25 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
   }
 
   paginate(data) {
-    this.filters.patchValue({ page: data.pageIndex + 1, page_size: data.pageSize }, { emitEvent: false });
+    this.filters.patchValue(
+      { page: data.pageIndex + 1, page_size: data.pageSize },
+      { emitEvent: false }
+    );
     this.getListByParams(true);
   }
 
   toggleInternacional({ id, internacional, tipo, categoria }) {
-    this.pubService.update(id, { internacional: !internacional, tipo, tipologia: categoria.tipologia.id })
+    this.pubService
+      .update(id, {
+        internacional: !internacional,
+        tipo,
+        tipologia: categoria.tipologia.id,
+      })
       .pipe(
         this.toast.observe({
           loading: 'Actualizando publicación',
           success: 'Publicación actualizada correctamente',
-          error: 'No se pudo actualizar la publicación'
-
+          error: 'No se pudo actualizar la publicación',
         })
       )
       .subscribe(() => {
@@ -385,13 +438,21 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
 
   convert({ id, url_manifiesto, categoria, tipo, descargable }) {
     const minioID = this.getMinioID(url_manifiesto);
-    this.pubService.convertirVideo(minioID, descargable).pipe(
-      switchMap(() => this.pubService.update(id, { convertido: false, tipo, tipologia: categoria.tipologia.id }))
-    ).subscribe(() => {
-      this.toast.show('Conversión iniciada');
-      this.getListByParams();
-
-    });
+    this.pubService
+      .convertirVideo(minioID, descargable)
+      .pipe(
+        switchMap(() =>
+          this.pubService.update(id, {
+            convertido: false,
+            tipo,
+            tipologia: categoria.tipologia.id,
+          })
+        )
+      )
+      .subscribe(() => {
+        this.toast.show('Conversión iniciada');
+        this.getListByParams();
+      });
   }
 
   getMinioID(urlManifiesto) {
@@ -415,20 +476,21 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
       nombre__wildcard: [''],
       tipologia_nombre_raw: [''],
       page_size: ['10'],
-      page: ['1']
+      page: ['1'],
     });
-    this.filters.valueChanges.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      shareReplay()
-    ).subscribe(filters => {
-      this.getListByParams();
-    });
+    this.filters.valueChanges
+      .pipe(debounceTime(500), distinctUntilChanged(), shareReplay())
+      .subscribe((filters) => {
+        this.getListByParams();
+      });
   }
 
   private listenPaginator() {
-    this.matPaginator.page.subscribe(data => {
-      this.filters.patchValue({ page: data.pageIndex + 1, page_size: data.pageSize }, { emitEvent: false });
+    this.matPaginator.page.subscribe((data) => {
+      this.filters.patchValue(
+        { page: data.pageIndex + 1, page_size: data.pageSize },
+        { emitEvent: false }
+      );
       this.getListByParams(true);
     });
   }
@@ -451,19 +513,22 @@ export class PublicationListComponent implements OnInit, AfterViewInit {
       minWidth: '95vw',
       // minHeight: '100vh',
       data: {
-        publicacion
-      }
+        publicacion,
+      },
     });
   }
 
   stopLive({ url_manifiesto }) {
     // this.matSnackBar.open('Coming soon');
     const minioID = this.getLiveMinioID(url_manifiesto);
-    this.pubService.stopLive(minioID).subscribe(() => {
-      this.toast.show('Directa detenida');
-    }, error => {
-      this.toast.error('No se pudo detener la directa');
-    });
+    this.pubService.stopLive(minioID).subscribe(
+      () => {
+        this.toast.show('Directa detenida');
+      },
+      (error) => {
+        this.toast.error('No se pudo detener la directa');
+      }
+    );
   }
 
   getLiveMinioID(urlManifiesto) {

@@ -1,34 +1,50 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { CommentService } from '../../../services/comment.service';
+import { CommentService } from '../services/comment.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { AuthService } from '../../../services/auth.service';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ComentarioBottomsheetComponent } from '../comentario-bottomsheet/comentario-bottomsheet.component';
-import { debounceTime, distinctUntilChanged, finalize, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  finalize,
+  tap,
+} from 'rxjs/operators';
 import { ComentarioService } from '../state/comentario.service';
 import { ComentarioQuery } from '../state/comentario.query';
 import { HotToastService } from '@ngneat/hot-toast';
 import { environment } from 'src/environments/environment';
 import { ConfirmDialogComponent } from 'src/app/common/components/confirm-dialog/confirm-dialog.component';
 
-const baseUrlv2 = environment.baseUrlv2
+const baseUrlv2 = environment.baseUrlv2;
 
 @Component({
   selector: 'app-comentario-list',
   templateUrl: './comentario-list.component.html',
-  styleUrls: ['./comentario-list.component.scss']
+  styleUrls: ['./comentario-list.component.scss'],
 })
 export class ComentarioListComponent implements OnInit {
-
-  displayedColumns: string[] = ['status', 'texto', 'fecha', 'nombre_usuario', 'publicacion', 'publicado', 'operations'];
-  comentarios$ = this.comentarioQuery.selectAll();
+  displayedColumns: string[] = [
+    'status',
+    'texto',
+    'fecha',
+    'nombre_usuario',
+    'publicacion',
+    'publicado',
+    'operations',
+  ];
+  comentarios$:any
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   disableToggle = false;
   params = {
     page: 1,
-    page_size: 10
+    page_size: 10,
   };
   total: number;
   @ViewChild('answerDialog') answerDialog: TemplateRef<any>;
@@ -40,18 +56,18 @@ export class ComentarioListComponent implements OnInit {
   constructor(
     private commentService: CommentService,
     private comentarioService: ComentarioService,
-    private comentarioQuery: ComentarioQuery,
     private snackBar: HotToastService,
     private bottomSheet: MatBottomSheet,
     private dialog: MatDialog,
     private fb: UntypedFormBuilder,
     public authService: AuthService
   ) {
+    
   }
 
   ngOnInit() {
     this.initForm();
-    this.load();
+    this.load();    
   }
 
   load() {
@@ -63,16 +79,18 @@ export class ComentarioListComponent implements OnInit {
     if (filters.eliminado === 'all') {
       delete filters.eliminado;
     }
-    this.comentarioService.get({
-      url: baseUrlv2 + '/comentario/',
-      params: { ...this.params, ...filters },
-      mapResponseFn: (response => {
-        this.total = response.count;
-        return response.results;
+    this.comentarioService
+      .get({
+        url: baseUrlv2 + '/comentario/',
+        params: { ...this.params, ...filters },
+        mapResponseFn: (response) => {
+          this.total = response.count;
+          this.comentarios$=response.results
+          return response.results;
+        },
       })
-    })
       // this.commentService.get_comentarios({...this.params, ...filters})
-      .pipe(finalize(() => this.loading = false))
+      .pipe(finalize(() => (this.loading = false)))
       .subscribe((data: any) => {
         // this.comentarios = data.results;
       });
@@ -82,26 +100,26 @@ export class ComentarioListComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Confirmación',
-        msg: '¿Está seguro que desea eliminar este comentario?'
-      }
+        msg: '¿Está seguro que desea eliminar este comentario?',
+      },
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.comentarioService.delete(element.id, {
-          skipWrite: true
-        })
+        this.comentarioService
+          .delete(element.id, {
+            skipWrite: true,
+          })
           .pipe(
             this.snackBar.observe({
               loading: 'Eliminando comentario',
               success: 'Comentario eliminado correctamente',
-              error: 'No se puedo eliminar el comentario'
+              error: 'No se puedo eliminar el comentario',
             })
           )
-          .subscribe(
-            () => {
-              this.total -= 1;
-              this.load();
-            });
+          .subscribe(() => {
+            this.total -= 1;
+            this.load();
+          });
       }
     });
   }
@@ -110,18 +128,21 @@ export class ComentarioListComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Confirmación',
-        msg: status ? '¿Está seguro que desea publicar este comentario?' : '¿Está seguro que desea ocultar este comentario?'
-      }
+        msg: status
+          ? '¿Está seguro que desea publicar este comentario?'
+          : '¿Está seguro que desea ocultar este comentario?',
+      },
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.disableToggle = true;
-        this.commentService.togglePublicado(id, status)
+        this.commentService
+          .togglePublicado(id, status)
           .pipe(
             this.snackBar.observe({
               loading: 'Actualizando comentario',
               success: 'Comentario actualizado correctamente',
-              error: 'No se puedo actualizar el comentario'
+              error: 'No se puedo actualizar el comentario',
             })
           )
           .subscribe(
@@ -150,29 +171,28 @@ export class ComentarioListComponent implements OnInit {
     this.answerDialogRef = this.dialog.open(this.answerDialog, {
       minWidth: '360px',
     });
-    this.answerDialogRef.afterClosed().subscribe(result => {
+    this.answerDialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.load();
-
       }
     });
   }
 
   saveComment() {
     if (this.commentForm.valid) {
-      this.commentService.addRespuesta(this.commentForm.value)
+      this.commentService
+        .addRespuesta(this.commentForm.value)
         .pipe(
           this.snackBar.observe({
             loading: 'Eviando respuesta comentario',
             success: 'Respuesta enviada correctamente',
-            error: 'Error al enviar el comentario'
+            error: 'Error al enviar el comentario',
           })
         )
-        .subscribe(data => {
+        .subscribe((data) => {
           this.commentForm.get('texto').reset();
           this.answerDialogRef.close(true);
-        }
-        );
+        });
     }
   }
 
@@ -194,17 +214,17 @@ export class ComentarioListComponent implements OnInit {
       publicacion: ['', [Validators.required]],
       texto: ['', [Validators.required]],
       usuario: [true, [Validators.required]],
-      comentario: ['', [Validators.required]]
+      comentario: ['', [Validators.required]],
     });
   }
 
   openBottomSheet(comment: any) {
     const ref = this.bottomSheet.open(ComentarioBottomsheetComponent, {
       data: {
-        comment
-      }
+        comment,
+      },
     });
-    ref.afterDismissed().subscribe(result => {
+    ref.afterDismissed().subscribe((result) => {
       if (result === 'delete') {
         this.eliminarComentario(comment);
       }

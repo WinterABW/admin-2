@@ -1,17 +1,31 @@
-import {Component, Inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {CommentService} from '../../../../services/comment.service';
+import {
+  Component,
+  Inject,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommentService } from '../../../comentario/services/comment.service';
 
 @Component({
   selector: 'app-publication-comments-dialog',
   templateUrl: './publication-comments-dialog.component.html',
-  styleUrls: ['./publication-comments-dialog.component.scss']
+  styleUrls: ['./publication-comments-dialog.component.scss'],
 })
 export class PublicationCommentsDialogComponent implements OnInit {
   options = {
-    suppressScrollX: true
+    suppressScrollX: true,
   };
   @ViewChild('answerDialog') answerDialog: TemplateRef<any>;
   commentForm: UntypedFormGroup;
@@ -24,8 +38,7 @@ export class PublicationCommentsDialogComponent implements OnInit {
     private commentService: CommentService,
     private fb: UntypedFormBuilder,
     private snackBar: MatSnackBar
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -37,18 +50,20 @@ export class PublicationCommentsDialogComponent implements OnInit {
     this.answerDialogRef = this.dialog.open(this.answerDialog, {
       minWidth: '360px',
     });
-    this.answerDialogRef.afterClosed().subscribe(data => {
+    this.answerDialogRef.afterClosed().subscribe((data) => {
       // reloadComments
     });
   }
 
   saveComment() {
     if (this.commentForm.valid) {
-      this.commentService.addRespuesta(this.commentForm.value).subscribe(data => {
+      this.commentService.addRespuesta(this.commentForm.value).subscribe(
+        (data) => {
           this.snackBar.open('Respuesta enviada correctamente');
           this.commentForm.get('texto').reset();
           this.answerDialogRef.close(true);
-        }, error => this.snackBar.open('Error al enviar el comentario')
+        },
+        (error) => this.snackBar.open('Error al enviar el comentario')
       );
     }
   }
@@ -58,7 +73,7 @@ export class PublicationCommentsDialogComponent implements OnInit {
       publicacion: ['', [Validators.required]],
       texto: ['', [Validators.required]],
       usuario: [true, [Validators.required]],
-      comentario: ['', [Validators.required]]
+      comentario: ['', [Validators.required]],
     });
   }
 }
